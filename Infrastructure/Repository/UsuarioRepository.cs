@@ -67,10 +67,8 @@ namespace Infrastructure.Repository
 
         public async Task<List<Usuario>> Alterar(Usuario obj)
         {
-            if (obj is null || !obj.ValidarData() || !obj.ValidarIdade())
-                return null;
-
-            Update(obj);
+            if (obj.Validation(_notification))
+                Update(obj);
 
             return await UsuariosAtivos();
         }

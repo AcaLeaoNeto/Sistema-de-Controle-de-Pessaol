@@ -54,11 +54,18 @@ namespace Presentation.Controllers
             [HttpPut]
             public async Task<ActionResult<Usuario>> AlterarUsuario(Usuario user)
             {
-                var newUser = await _usuario.Alterar(user);
-                if (newUser is null)
-                    return NotFound("Usuario Não Encontrado");
-
-                return Ok(newUser);
+                try
+                {
+                    var users = await _usuario.Alterar(user);
+                    if (_notification.Valid)
+                        return Ok(users);
+                    else
+                        return BadRequest(_notification.Messages);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
             [HttpDelete("{id}")]
