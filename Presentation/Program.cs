@@ -1,5 +1,5 @@
-
 using Domain.Interfaces;
+using Domain.Notifications;
 using Infrastructure.Context;
 using Infrastructure.Repository;
 
@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUsuario, UsuarioRepository>();
+builder.Services.AddScoped<INotification, Notificaion>();
 builder.Services.AddDbContext<DBContext>();
 var app = builder.Build();
 

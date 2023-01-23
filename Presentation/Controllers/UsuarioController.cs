@@ -1,6 +1,7 @@
 ﻿using Domain.Entitys;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Interfaces;
+using Domain.Notifications;
 
 namespace Presentation.Controllers
 {
@@ -9,10 +10,12 @@ namespace Presentation.Controllers
         public class UsuarioController : ControllerBase
         {
         private readonly IUsuario _usuario;
+        private readonly INotification _notification;
 
-            public UsuarioController(IUsuario usuario)
+            public UsuarioController(IUsuario usuario, INotification notification)
             {
                 _usuario = usuario;
+                _notification = notification;
             }
 
             [HttpGet]
@@ -34,11 +37,18 @@ namespace Presentation.Controllers
         [HttpPost]
             public async Task<ActionResult<List<Usuario>>> AddUsuario(Usuario user)
             {
-                var users = await _usuario.Cadastro(user);
-                if (users is null)
-                    return NotFound("Usuario Não Encontrado");
-
-                return Ok(users);
+                try
+                {
+                    var users = await _usuario.Cadastro(user);
+                    if (_notification.Valid)
+                        return Ok(users); 
+                    else
+                        return BadRequest(_notification.Messages);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
             [HttpPut]

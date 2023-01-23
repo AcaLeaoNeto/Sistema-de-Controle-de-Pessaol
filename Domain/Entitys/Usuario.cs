@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Notifications;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entitys
 {
     public class Usuario
     {
+
         public Usuario(string name, DateTime dataDeNacimento, string sexo)
         {
             Name = name;
@@ -11,6 +13,8 @@ namespace Domain.Entitys
             Sexo = sexo;
             Idade = CalcularIdade(dataDeNacimento);
         }
+
+
 
         [Required]
         public int Id { get; set; }
@@ -22,6 +26,18 @@ namespace Domain.Entitys
         public string Sexo { get; set; } = string.Empty;
         public int Idade { get; set; }
         public bool Ativo { get; set; } = true;
+
+
+        public bool Validation(INotification notification) 
+        {
+            if (!ValidarData())
+                notification.AddMessage("Erro, Data Inválida");
+
+            if (!ValidarIdade())
+                notification.AddMessage("Erro, Usuario precisa ser maior de idade");
+
+            return notification.Valid;
+        }
 
         public bool ValidarData()
         {
@@ -40,5 +56,6 @@ namespace Domain.Entitys
 
             return idade;
         }
+
     }
 }

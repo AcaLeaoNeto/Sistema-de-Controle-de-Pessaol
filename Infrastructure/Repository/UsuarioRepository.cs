@@ -1,5 +1,6 @@
 ﻿using Domain.Entitys;
 using Domain.Interfaces;
+using Domain.Notifications;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,13 @@ namespace Infrastructure.Repository
     public class UsuarioRepository : BaseRepository<Usuario> , IUsuario
     {
         private readonly DBContext _db;
+        private readonly INotification _notification;
 
-        public UsuarioRepository(DBContext db) : base(db)
+
+        public UsuarioRepository(DBContext db, INotification notification) : base(db)
         {
             _db = db;
+            _notification = notification;
         }
 
         public async Task<bool> DesativarUsuario(int id)
@@ -55,16 +59,8 @@ namespace Infrastructure.Repository
 
         public async Task<List<Usuario>> Cadastro(Usuario obj)
         {
-            if (obj is null)
-                return null;
-
-            if (!obj.ValidarData())
-                return null;
-
-            if (!obj.ValidarIdade())
-                return null;
-
-            Insert(obj);
+            if(obj.Validation(_notification))
+                Insert(obj);
 
             return await UsuariosAtivos();
         }
