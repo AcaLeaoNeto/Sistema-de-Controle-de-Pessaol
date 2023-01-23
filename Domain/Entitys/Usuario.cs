@@ -39,17 +39,17 @@ namespace Domain.Entitys
             return notification.Valid;
         }
 
-        public bool ValidarData()
+        private bool ValidarData()
         {
             return DataDeNacimento <= DateTime.Now;
         }
 
-        public bool ValidarIdade()
+        private bool ValidarIdade()
         {
             return CalcularIdade(DataDeNacimento) >= 18;
         }
 
-        public int CalcularIdade(DateTime Nacimento)
+        private int CalcularIdade(DateTime Nacimento)
         {
             var idade = DateTime.Now.Year - Nacimento.Year;
             if (Nacimento > DateTime.Now.AddYears(-idade)) idade--;
