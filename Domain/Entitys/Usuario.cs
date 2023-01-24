@@ -18,7 +18,7 @@ namespace Domain.Entitys
 
         [Required]
         public int Id { get; set; }
-        [Required, MinLength(5), MaxLength(45)]
+        [Required, MinLength(1), MaxLength(85)]
         public string Name { get; set; } = string.Empty;
         [Required]
         public DateTime DataDeNacimento { get; set; }
@@ -31,10 +31,16 @@ namespace Domain.Entitys
         public bool Validation(INotification notification) 
         {
             if (!ValidarData())
-                notification.AddMessage("Erro, Data Inválida");
+                notification.AddMessage(" Erro, Data Inválida ");
 
             if (!ValidarIdade())
-                notification.AddMessage("Erro, Usuario precisa ser maior de idade");
+                notification.AddMessage(" Erro, Usuario precisa ser maior de idade ");
+
+            if (!ValidarSexo())
+                notification.AddMessage(" Erro, Os generos disponiveis são 'Masculino' ou 'Feminino' ");
+
+            if (!ValidarNome())
+                notification.AddMessage(" Erro, O Nome deve conter pelo menos 3 caracteres, no maximo 85 ");
 
             return notification.Valid;
         }
@@ -47,6 +53,16 @@ namespace Domain.Entitys
         private bool ValidarIdade()
         {
             return CalcularIdade(DataDeNacimento) >= 18;
+        }
+
+        private bool ValidarSexo()
+        {
+            return Sexo == "Masculino" || Sexo == "Feminino";
+        }
+
+        private bool ValidarNome()
+        {
+            return Name.Length > 3 && Name.Length <= 85;
         }
 
         private int CalcularIdade(DateTime Nacimento)
