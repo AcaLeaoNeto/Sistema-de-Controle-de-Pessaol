@@ -21,21 +21,36 @@ namespace Presentation.Controllers
             [HttpGet]
             public async Task<ActionResult<List<Usuario>>> GetAllUsuarios()
             {
-                return await _usuario.UsuariosAtivos();
+                try
+                {
+                    var AllUsers = await _usuario.UsuariosAtivos();
+                    return Ok(AllUsers);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
             [HttpGet("{id}")]
             public ActionResult<List<Usuario>> GetUsuario(int id)
             {
-                var user = _usuario.UsuarioById(id);
-                if (user is null)
-                    return NotFound("Usuario Não Encontrado");
+                try
+                {
+                    var user = _usuario.UsuarioById(id);
+                    if (user is null)
+                        return NotFound("Usuario Não Encontrado");
 
-                return Ok(user);
+                    return Ok(user);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
         [HttpPost]
-            public async Task<ActionResult<List<Usuario>>> AddUsuario(Usuario user)
+            public async Task<ActionResult<List<Usuario>>> AddUsuario(UsuarioDto user)
             {
                 try
                 {
@@ -71,21 +86,35 @@ namespace Presentation.Controllers
             [HttpDelete("{id}")]
             public async Task<ActionResult<Usuario>> DeletarUsuario(int id)
             {
-                var users = await _usuario.ApagarUsuario(id);
-                if (users is null)
-                    return NotFound("Usuario Não Encontrado");
+                try
+                {
+                    var users = await _usuario.ApagarUsuario(id);
+                    if (users is null)
+                        return NotFound("Usuario Não Encontrado");
 
-                return Ok(users);
+                    return Ok(users);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
             [HttpPatch("Desativar/{id}")]
             public async Task<ActionResult<Usuario>> DesativarUsuario(int id)
             {
-                var result = await _usuario.DesativarUsuario(id);
-                if (result == false)
-                    return NotFound("Usuario Não Encontrado");
+                try
+                {
+                    var result = await _usuario.DesativarUsuario(id);
+                    if (result == false)
+                        return NotFound("Usuario Não Encontrado");
 
-                return Ok();
+                    return Ok($"Usuario Id:{id} Desativado.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
         }

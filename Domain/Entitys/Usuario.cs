@@ -14,7 +14,10 @@ namespace Domain.Entitys
             Idade = CalcularIdade(dataDeNacimento);
         }
 
-
+        public static explicit operator Usuario(UsuarioDto dto)
+        {
+            return new Usuario(dto.Name, dto.DataDeNacimento, dto.Sexo);
+        }
 
         [Required]
         public int Id { get; set; }

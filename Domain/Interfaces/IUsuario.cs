@@ -8,7 +8,7 @@ namespace Domain.Interfaces
         Task<List<Usuario>?> ApagarUsuario(int id);
         Task<List<Usuario>> UsuariosAtivos();
         Usuario UsuarioById(int id);
-        Task<List<Usuario>> Cadastro(Usuario obj);
+        Task<List<Usuario>> Cadastro(UsuarioDto obj);
         Task<List<Usuario>> Alterar(Usuario obj);
     }
 }

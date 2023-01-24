@@ -57,10 +57,12 @@ namespace Infrastructure.Repository
             return user;
         }
 
-        public async Task<List<Usuario>> Cadastro(Usuario obj)
+        public async Task<List<Usuario>> Cadastro(UsuarioDto obj)
         {
-            if(obj.Validation(_notification))
-                Insert(obj);
+            var user = (Usuario)obj;
+
+            if(user.Validation(_notification))
+                Insert(user);
 
             return await UsuariosAtivos();
         }
