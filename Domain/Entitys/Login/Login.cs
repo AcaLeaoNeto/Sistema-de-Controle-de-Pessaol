@@ -3,7 +3,14 @@ namespace Domain.Entitys.Login
 {
     public class Login
     {
-        public string Username { get; set; } = string.Empty;
+        public Login(string username, byte[] passwordHash, byte[] passwordSalt)
+        {
+            Username = username;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+        }
+
+ ,        public string Username { get; set; } = string.Empty;
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

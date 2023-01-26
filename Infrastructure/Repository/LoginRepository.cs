@@ -13,9 +13,18 @@ namespace Infrastructure.Repository
             _db = db;
         }
 
-        public Task<string> registerLog(LoginDto LogForm)
+        public Login GetByUsername(string username)
         {
-            throw new NotImplementedException();
+            var TryLog = _db.Logs.FirstOrDefault(l => l.Username == username);
+            return TryLog;
         }
+
+        public string RegisterLog(Login LogForm)
+        {
+            Insert(LogForm);
+            return "ok";
+        }
+
+
     }
 }

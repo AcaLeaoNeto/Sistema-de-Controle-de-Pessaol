@@ -1,10 +1,10 @@
-﻿using Domain.Entitys;
+﻿using Domain.Entitys.Login;
 
 namespace Services.LoginServices
 {
     public interface ILoginServices
     {
         string Login(LoginDto request);
-        Login Register(LoginDto request);
+        string Register(LoginDto request);
     }
 }

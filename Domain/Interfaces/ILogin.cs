@@ -5,6 +5,7 @@ namespace Domain.Interfaces
 {
     public interface ILogin : IBase<Login>
     {
-        Task<string> registerLog(LoginDto LogForm);
+        string RegisterLog(Login LogForm);
+        Login GetByUsername(string username);
     }
 }

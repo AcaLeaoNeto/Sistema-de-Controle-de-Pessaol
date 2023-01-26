@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.LoginServices;
-using Domain.Entitys;
+using Domain.Entitys.Login;
 
 namespace Presentation.Controllers
-{        
+{
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : Controller
@@ -17,7 +17,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<Login>> Register(LoginDto request)
+        public async Task<ActionResult<string>> Register(LoginDto request)
         {
             var result = _Login.Register(request);
 

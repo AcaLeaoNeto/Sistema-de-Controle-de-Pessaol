@@ -3,7 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using Domain.Entitys;
+using Domain.Entitys.Login;
+using Domain.Interfaces;
+
 
 namespace Services.LoginServices
 {
@@ -11,42 +13,49 @@ namespace Services.LoginServices
     {
 
         private readonly IConfiguration _configuration;
+        private readonly ILogin _login;
 
-        public static Login user = new Login();
 
 
-        public LoginServices(IConfiguration configuration)
+        public LoginServices(IConfiguration configuration, ILogin login)
         {
             _configuration = configuration;
+            _login = login;
         }
 
-        public Login Register(LoginDto request)
+
+        public string Register(LoginDto request)
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.Username = request.Username;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            var Newlog = new Login(request.Username, passwordHash, passwordSalt);
 
-            return user;
+            var result  = _login.RegisterLog(Newlog);
+
+            return result;
         }
+
 
         public string Login(LoginDto request)
         {
-            if (user.Username != request.Username)
-            {
-                return "User not found.";
-            }
+            //if (user.Username != request.Username)
+            //{
+            //    return "User not found.";
+            //}
 
-            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            var TryLog = _login.GetByUsername(request.Username);
+
+
+            if (!VerifyPasswordHash(request.Password, TryLog.PasswordHash, TryLog.PasswordSalt))
             {
                 return "Wrong password.";
             }
 
-            string token = CreateToken(user);
+            string token = CreateToken(TryLog);
 
             return token;
         }
+
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -57,6 +66,7 @@ namespace Services.LoginServices
             }
         }
 
+
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
@@ -65,6 +75,7 @@ namespace Services.LoginServices
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
+
 
         private string CreateToken(Login user)
         {
@@ -87,5 +98,7 @@ namespace Services.LoginServices
 
             return jwt;
         }
+
+
     }
 }
