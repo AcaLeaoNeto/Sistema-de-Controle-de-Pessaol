@@ -1,11 +1,11 @@
-﻿using Domain.Entitys;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Domain.Interfaces;
 using Domain.Notifications;
+using Domain.Entitys.Usuario;
 
 namespace Presentation.Controllers
 {
-        [Route("api/[controller]")]
+    [Route("api/[controller]")]
         [ApiController]
         public class UsuarioController : ControllerBase
         {

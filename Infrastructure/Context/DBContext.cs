@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Domain.Entitys;
+using Domain.Entitys.Usuario;
+using Domain.Entitys.Login;
 
 namespace Infrastructure.Context
 {
@@ -17,5 +18,6 @@ namespace Infrastructure.Context
         }
 
         public DbSet<Usuario> usuarios { get; set; }
+        public DbSet<Login> Logs { get; set; }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Domain.Entitys;
+﻿using Domain.Entitys.Usuario;
 
 namespace Domain.Interfaces
 {
-    public interface IUsuario : IBaseInterface<Usuario>
+    public interface IUsuario : IBase<Usuario>
     {
         Task<bool> DesativarUsuario(int id);
         Task<List<Usuario>?> ApagarUsuario(int id);

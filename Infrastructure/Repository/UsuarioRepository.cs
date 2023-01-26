@@ -1,4 +1,4 @@
-﻿using Domain.Entitys;
+﻿using Domain.Entitys.Usuario;
 using Domain.Interfaces;
 using Domain.Notifications;
 using Infrastructure.Context;

@@ -1,7 +1,7 @@
 ﻿using Domain.Notifications;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entitys
+namespace Domain.Entitys.Usuario
 {
     public class Usuario
     {
@@ -31,7 +31,7 @@ namespace Domain.Entitys
         public bool Ativo { get; set; } = true;
 
 
-        public bool Validation(INotification notification) 
+        public bool Validation(INotification notification)
         {
             if (!ValidarData())
                 notification.AddMessage(" Erro, Data Inválida ");

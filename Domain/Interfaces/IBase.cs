@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IBaseInterface<T> where T : class
+    public interface IBase<T> where T : class
     {
         void Insert(T obj);
         void Update(T obj);

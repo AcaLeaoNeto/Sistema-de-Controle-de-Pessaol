@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Entitys
+namespace Domain.Entitys.Usuario
 {
     public class UsuarioDto
     {
