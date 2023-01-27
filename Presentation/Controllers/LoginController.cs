@@ -2,6 +2,8 @@
 using Services.LoginServices;
 using Domain.Entitys.Login;
 using Domain.Notifications;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Presentation.Controllers
 {
@@ -19,8 +21,8 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpPost("register")]
-        public async Task<ActionResult<string>> Register(LoginDto request)
+        [HttpPost("register"), Authorize(Roles = "Manager")]
+        public async Task<ActionResult<string>> Register(LoginSingOn request)
         {
             if (request is null)
                 return BadRequest("Formulario em branco");
@@ -30,7 +32,7 @@ namespace Presentation.Controllers
                 var result = _Login.Register(request);
 
                 if (_Notification.Valid)
-                    return Ok(result);
+                    return result;
                 else
                     return BadRequest(_Notification.Messages);
             }
@@ -43,12 +45,15 @@ namespace Presentation.Controllers
             
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginDto request)
+        public async Task<ActionResult<string>> Login(LoginSingIn request)
         {
             try
             {
-                var KeyTK = _Login.Login(request);
-                return Ok(KeyTK);
+                var response = _Login.Login(request);
+                if (_Notification.Valid)
+                    return response; 
+                else
+                    return BadRequest(_Notification.Messages);
             }
             catch (Exception ex)
             {

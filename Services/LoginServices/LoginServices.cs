@@ -25,41 +25,52 @@ namespace Services.LoginServices
         }
 
 
-        public string Register(LoginDto request)
+
+        public string Register(LoginSingOn request)
         {
             if (_login.GetByUsername(request.Username) is not null)
-                return "Usuario já existente";
+            {
+                _notification.AddMessage("Log já Cadastrado");
+            }
 
             if (request.Validation(_notification))
             {
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
                 var Newlog = new Login(request.Username, passwordHash, passwordSalt);
                 var result = _login.RegisterLog(Newlog);
+
                 return result;
             }
+
             return "Erro";
         }
 
 
-        public string Login(LoginDto request)
+
+        public string Login(LoginSingIn request)
         {
 
             var TryLog = _login.GetByUsername(request.Username);
+
             if (TryLog is null)
             {
-                return "Usuario não encontrado.";
+                _notification.AddMessage("Log Não Encontrado");
             }
-
-            if (!VerifyPasswordHash(request.Password, TryLog.PasswordHash, TryLog.PasswordSalt))
+            else if (!VerifyPasswordHash(request.Password, TryLog.PasswordHash, TryLog.PasswordSalt))
             {
-                return "Senha icorreta.";
+                _notification.AddMessage("Senha Incorreta");
+            }
+                
+
+            if (_notification.Valid)
+            {
+                var token = CreateToken(TryLog);
+                return token;
             }
 
-            string token = CreateToken(TryLog);
-
-            return token;
+            return "Erro";
         }
-
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
@@ -69,6 +80,7 @@ namespace Services.LoginServices
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
+
 
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
@@ -81,11 +93,13 @@ namespace Services.LoginServices
         }
 
 
+
         private string CreateToken(Login user)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -102,7 +116,5 @@ namespace Services.LoginServices
 
             return jwt;
         }
-
-
     }
 }

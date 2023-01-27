@@ -50,7 +50,7 @@ namespace Presentation.Controllers
                 }
             }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles ="Manager")]
             public async Task<ActionResult<List<Usuario>>> AddUsuario(UsuarioDto user)
             {
                 try
@@ -84,7 +84,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpDelete("{id}")]
+            [HttpDelete("{id}"), Authorize(Roles = "Manager")]
             public async Task<ActionResult<Usuario>> DeletarUsuario(int id)
             {
                 try
@@ -101,7 +101,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpPatch("Desativar/{id}")]
+            [HttpPatch("Desativar/{id}"), Authorize(Roles = "Manager")]
             public async Task<ActionResult<Usuario>> DesativarUsuario(int id)
             {
                 try

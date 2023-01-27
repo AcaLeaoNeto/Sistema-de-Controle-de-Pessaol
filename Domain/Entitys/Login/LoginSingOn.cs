@@ -2,10 +2,11 @@
 
 namespace Domain.Entitys.Login
 {
-    public class LoginDto
+    public class LoginSingOn
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
 
 
         public bool Validation(INotification notification)
@@ -24,6 +25,9 @@ namespace Domain.Entitys.Login
 
             if (!PasswordSpecialValid(Password))
                 notification.AddMessage("Senha deve conter pelo menos um carácter especial");
+
+            if (!RoleValid(Role))
+                notification.AddMessage("Role Permitidos são 'Regular' ou 'Manager'");
 
             return notification.Valid;
         }
@@ -51,6 +55,11 @@ namespace Domain.Entitys.Login
         private bool PasswordSpecialValid(string password)
         {
             return password.Any(c => !Char.IsLetterOrDigit(c));
+        }
+
+        private bool RoleValid(string Role)
+        {
+            return Role == "Manager" || Role == "Regular";
         }
 
 

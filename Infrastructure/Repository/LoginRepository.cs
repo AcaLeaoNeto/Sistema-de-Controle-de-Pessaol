@@ -25,7 +25,7 @@ namespace Infrastructure.Repository
         public string RegisterLog(Login LogForm)
         {
             Insert(LogForm);
-            return "Usuario Registrado";
+            return "Log Registrado";
         }
 
 
