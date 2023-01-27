@@ -10,7 +10,8 @@ namespace Domain.Entitys.Login
             PasswordSalt = passwordSalt;
         }
 
- ,        public string Username { get; set; } = string.Empty;
+        public int id { get; set; }
+        public string Username { get; set; } = string.Empty;
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

@@ -2,11 +2,12 @@
 using Domain.Interfaces;
 using Domain.Notifications;
 using Domain.Entitys.Usuario;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
-    [Route("api/[controller]")]
-        [ApiController]
+        [Route("api/[controller]")]
+        [ApiController , Authorize]
         public class UsuarioController : ControllerBase
         {
         private readonly IUsuario _usuario;

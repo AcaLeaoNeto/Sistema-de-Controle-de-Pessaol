@@ -15,14 +15,17 @@ namespace Infrastructure.Repository
 
         public Login GetByUsername(string username)
         {
-            var TryLog = _db.Logs.FirstOrDefault(l => l.Username == username);
+            var TryLog =  _db.Logs.FirstOrDefault(l => l.Username == username);
+            if (TryLog is null)
+                return null;     
+
             return TryLog;
         }
 
         public string RegisterLog(Login LogForm)
         {
             Insert(LogForm);
-            return "ok";
+            return "Usuario Registrado";
         }
 
 

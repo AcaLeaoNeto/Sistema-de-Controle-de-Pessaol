@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
-    public class BaseRepository<T> : ILogin<T> where T : class
+    public class BaseRepository<T> : IBase<T> where T : class
     {
         private readonly DBContext _db;
 

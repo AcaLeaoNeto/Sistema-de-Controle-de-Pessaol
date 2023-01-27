@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Domain.Entitys.Login;
 using Domain.Interfaces;
-
+using Domain.Notifications;
 
 namespace Services.LoginServices
 {
@@ -14,41 +14,45 @@ namespace Services.LoginServices
 
         private readonly IConfiguration _configuration;
         private readonly ILogin _login;
+        private readonly INotification _notification;
 
 
-
-        public LoginServices(IConfiguration configuration, ILogin login)
+        public LoginServices(IConfiguration configuration, ILogin login, INotification notification)
         {
             _configuration = configuration;
             _login = login;
+            _notification = notification;
         }
 
 
         public string Register(LoginDto request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            if (_login.GetByUsername(request.Username) is not null)
+                return "Usuario já existente";
 
-            var Newlog = new Login(request.Username, passwordHash, passwordSalt);
-
-            var result  = _login.RegisterLog(Newlog);
-
-            return result;
+            if (request.Validation(_notification))
+            {
+                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                var Newlog = new Login(request.Username, passwordHash, passwordSalt);
+                var result = _login.RegisterLog(Newlog);
+                return result;
+            }
+            return "Erro";
         }
 
 
         public string Login(LoginDto request)
         {
-            //if (user.Username != request.Username)
-            //{
-            //    return "User not found.";
-            //}
 
             var TryLog = _login.GetByUsername(request.Username);
-
+            if (TryLog is null)
+            {
+                return "Usuario não encontrado.";
+            }
 
             if (!VerifyPasswordHash(request.Password, TryLog.PasswordHash, TryLog.PasswordSalt))
             {
-                return "Wrong password.";
+                return "Senha icorreta.";
             }
 
             string token = CreateToken(TryLog);
