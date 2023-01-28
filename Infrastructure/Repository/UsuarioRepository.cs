@@ -69,6 +69,7 @@ namespace Infrastructure.Repository
 
         public async Task<List<Usuario>> Alterar(Usuario obj)
         {
+
             if (obj.Validation(_notification))
                 Update(obj);
 
