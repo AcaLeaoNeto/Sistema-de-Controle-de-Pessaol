@@ -1,11 +1,10 @@
-﻿using Domain.Entitys;
-using Domain.Entitys.Login;
+﻿using Domain.Entitys.Login;
 
 namespace Domain.Interfaces
 {
-    public interface ILogin : IBase<Login>
+    public interface ILogin : IBase<Log>
     {
-        string RegisterLog(Login LogForm);
-        Login GetByUsername(string username);
+        string RegisterLog(Log LogForm);
+        Log GetByUsername(string username);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Domain.Interfaces
 {
-    public interface IUsuario : IBase<Usuario>
+    public interface IUsuario : IBase<User>
     {
         Task<bool> DesativarUsuario(int id);
-        Task<List<Usuario>?> ApagarUsuario(int id);
-        Task<List<Usuario>> UsuariosAtivos();
-        Usuario UsuarioById(int id);
-        Task<List<Usuario>> Cadastro(UsuarioDto obj);
-        Task<List<Usuario>> Alterar(Usuario obj);
+        Task<List<User>?> ApagarUsuario(int id);
+        Task<List<User>> UsuariosAtivos();
+        User UsuarioById(int id);
+        Task<List<User>> Cadastro(UserDto obj);
+        Task<List<User>> Alterar(User obj);
     }
 }

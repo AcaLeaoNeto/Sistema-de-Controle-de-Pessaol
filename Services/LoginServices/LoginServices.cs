@@ -26,7 +26,7 @@ namespace Services.LoginServices
 
 
 
-        public string Register(LoginSingOn request)
+        public string Register(SingOn request)
         {
             if (_login.GetByUsername(request.Username) is not null)
                 _notification.AddMessage("Log já Cadastrado");
@@ -35,7 +35,7 @@ namespace Services.LoginServices
             {
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-                var Newlog = new Login(request.Username, passwordHash, passwordSalt, request.Role);
+                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, request.UserId);
                 var result = _login.RegisterLog(Newlog);
 
                 return result;
@@ -46,7 +46,7 @@ namespace Services.LoginServices
 
 
 
-        public string Login(LoginSingIn request)
+        public string Login(SingIn request)
         {
 
             var TryLog = _login.GetByUsername(request.Username);
@@ -92,7 +92,7 @@ namespace Services.LoginServices
 
 
 
-        private string CreateToken(Login user)
+        private string CreateToken(Log user)
         {
             List<Claim> claims = new List<Claim>
             {

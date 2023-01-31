@@ -5,7 +5,7 @@ namespace Services.LoginServices
 {
     public interface ILoginServices
     {
-        string Login(LoginSingIn request);
-        string Register(LoginSingOn request);
+        string Login(SingIn request);
+        string Register(SingOn request);
     }
 }
