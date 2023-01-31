@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
-    public class UsuarioRepository : BaseRepository<Usuario> , IUsuario
+    public class UsuarioRepository : BaseRepository<User> , IUsuario
     {
         private readonly DBContext _db;
         private readonly INotification _notification;
@@ -31,7 +31,7 @@ namespace Infrastructure.Repository
         }
     
 
-        public async Task<List<Usuario>?> ApagarUsuario(int id)
+        public async Task<List<User>?> ApagarUsuario(int id)
         {
             var user = _db.usuarios.FirstOrDefault(u => u.Id == id);
             if (user is null)
@@ -42,13 +42,13 @@ namespace Infrastructure.Repository
             return await UsuariosAtivos();
         }
 
-        public async Task<List<Usuario>> UsuariosAtivos()
+        public async Task<List<User>> UsuariosAtivos()
         {
             var users = await _db.usuarios.Where(u => u.Ativo == true).ToListAsync();
             return users;
         }
 
-        public Usuario UsuarioById(int id)
+        public User UsuarioById(int id)
         {
             var user = _db.usuarios.FirstOrDefault(u => u.Id == id && u.Ativo == true);
             if (user is null)
@@ -57,9 +57,9 @@ namespace Infrastructure.Repository
             return user;
         }
 
-        public async Task<List<Usuario>> Cadastro(UsuarioDto obj)
+        public async Task<List<User>> Cadastro(UserDto obj)
         {
-            var user = (Usuario)obj;
+            var user = (User)obj;
 
             if(user.Validation(_notification))
                 Insert(user);
@@ -67,7 +67,7 @@ namespace Infrastructure.Repository
             return await UsuariosAtivos();
         }
 
-        public async Task<List<Usuario>> Alterar(Usuario obj)
+        public async Task<List<User>> Alterar(User obj)
         {
 
             if (obj.Validation(_notification))

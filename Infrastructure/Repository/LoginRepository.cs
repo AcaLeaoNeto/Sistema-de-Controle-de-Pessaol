@@ -4,7 +4,7 @@ using Infrastructure.Context;
 
 namespace Infrastructure.Repository
 {
-    public class LoginRepository : BaseRepository<Login>, ILogin
+    public class LoginRepository : BaseRepository<Log>, ILogin
     {
         private readonly DBContext _db;
 
@@ -13,7 +13,7 @@ namespace Infrastructure.Repository
             _db = db;
         }
 
-        public Login GetByUsername(string username)
+        public Log GetByUsername(string username)
         {
             var TryLog =  _db.Logs.FirstOrDefault(l => l.Username == username);
             if (TryLog is null)
@@ -22,7 +22,7 @@ namespace Infrastructure.Repository
             return TryLog;
         }
 
-        public string RegisterLog(Login LogForm)
+        public string RegisterLog(Log LogForm)
         {
             Insert(LogForm);
             return "Log Registrado";

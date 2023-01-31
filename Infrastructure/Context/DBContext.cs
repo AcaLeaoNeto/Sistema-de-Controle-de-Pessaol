@@ -17,7 +17,7 @@ namespace Infrastructure.Context
             optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SimpleApi;Trusted_Connection=true;TrustServerCertificate=true;");
         }
 
-        public DbSet<Usuario> usuarios { get; set; }
-        public DbSet<Login> Logs { get; set; }
+        public DbSet<User> usuarios { get; set; }
+        public DbSet<Log> Logs { get; set; }
     }
 }
