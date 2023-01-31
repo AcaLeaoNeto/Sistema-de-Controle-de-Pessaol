@@ -34,7 +34,7 @@ namespace Presentation.Controllers
             }
 
             [HttpGet("{id}")]
-            public ActionResult<List<Usuario>> GetUsuario(int id)
+            public ActionResult<List<Usuario>> GetUsuario([FromBody] int id)
             {
                 try
                 {
@@ -51,8 +51,11 @@ namespace Presentation.Controllers
             }
 
         [HttpPost, Authorize(Roles ="Manager")]
-            public async Task<ActionResult<List<Usuario>>> AddUsuario(UsuarioDto user)
+            public async Task<ActionResult<List<Usuario>>> AddUsuario([FromBody] UsuarioDto user)
             {
+                if (!ModelState.IsValid)
+                    return BadRequest();
+
                 try
                 {
                     var users = await _usuario.Cadastro(user);
@@ -68,7 +71,7 @@ namespace Presentation.Controllers
             }
 
             [HttpPut]
-            public async Task<ActionResult<Usuario>> AlterarUsuario(Usuario user)
+            public async Task<ActionResult<Usuario>> AlterarUsuario([FromBody] Usuario user)
             {
                 try
                 {
@@ -85,7 +88,7 @@ namespace Presentation.Controllers
             }
 
             [HttpDelete("{id}"), Authorize(Roles = "Manager")]
-            public async Task<ActionResult<Usuario>> DeletarUsuario(int id)
+            public async Task<ActionResult<Usuario>> DeletarUsuario([FromBody] int id)
             {
                 try
                 {
@@ -102,7 +105,7 @@ namespace Presentation.Controllers
             }
 
             [HttpPatch("Desativar/{id}"), Authorize(Roles = "Manager")]
-            public async Task<ActionResult<Usuario>> DesativarUsuario(int id)
+            public async Task<ActionResult<Usuario>> DesativarUsuario([FromBody] int id)
             {
                 try
                 {

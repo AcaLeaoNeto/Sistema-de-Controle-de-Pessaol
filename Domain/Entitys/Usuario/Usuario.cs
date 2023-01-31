@@ -1,4 +1,5 @@
-﻿using Domain.Notifications;
+﻿using Domain.Enums;
+using Domain.Notifications;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entitys.Usuario
@@ -40,10 +41,7 @@ namespace Domain.Entitys.Usuario
                 notification.AddMessage(" Erro, Usuario precisa ser maior de idade ");
 
             if (!ValidarSexo())
-                notification.AddMessage(" Erro, Os generos disponiveis são 'Masculino' ou 'Feminino' ");
-
-            if (!ValidarNome())
-                notification.AddMessage(" Erro, O Nome deve conter pelo menos 3 caracteres, no maximo 85 ");
+                notification.AddMessage(" Erro, Os generos incorreto");
 
             return notification.Valid;
         }
@@ -60,12 +58,7 @@ namespace Domain.Entitys.Usuario
 
         private bool ValidarSexo()
         {
-            return Sexo == "Masculino" || Sexo == "Feminino";
-        }
-
-        private bool ValidarNome()
-        {
-            return Name.Length > 3 && Name.Length <= 85;
+            return new List<string>(Enum.GetNames(typeof(Generos))).Contains(Sexo);
         }
 
         private int CalcularIdade(DateTime Nacimento)

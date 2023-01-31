@@ -29,15 +29,13 @@ namespace Services.LoginServices
         public string Register(LoginSingOn request)
         {
             if (_login.GetByUsername(request.Username) is not null)
-            {
                 _notification.AddMessage("Log já Cadastrado");
-            }
 
             if (request.Validation(_notification))
             {
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-                var Newlog = new Login(request.Username, passwordHash, passwordSalt);
+                var Newlog = new Login(request.Username, passwordHash, passwordSalt, request.Role);
                 var result = _login.RegisterLog(Newlog);
 
                 return result;

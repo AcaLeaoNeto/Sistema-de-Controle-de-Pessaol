@@ -1,11 +1,17 @@
 ﻿using Domain.Notifications;
+using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace Domain.Entitys.Login
 {
     public class LoginSingOn
     {
+        [Required]
         public string Username { get; set; } = string.Empty;
+        [Required]
         public string Password { get; set; } = string.Empty;
+        [Required]
         public string Role { get; set; } = string.Empty;
 
 
@@ -27,7 +33,7 @@ namespace Domain.Entitys.Login
                 notification.AddMessage("Senha deve conter pelo menos um carácter especial");
 
             if (!RoleValid(Role))
-                notification.AddMessage("Role Permitidos são 'Regular' ou 'Manager'");
+                notification.AddMessage("Concessão Invalida");
 
             return notification.Valid;
         }
@@ -59,7 +65,7 @@ namespace Domain.Entitys.Login
 
         private bool RoleValid(string Role)
         {
-            return Role == "Manager" || Role == "Regular";
+            return new List<string>(Enum.GetNames(typeof(Roles))).Contains(Role);
         }
 
 
