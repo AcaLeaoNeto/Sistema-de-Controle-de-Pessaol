@@ -1,4 +1,5 @@
 ﻿using Domain.Entitys.Login;
+using Domain.Entitys.Usuario;
 using Domain.Interfaces;
 using Domain.Notifications;
 using Infrastructure.Context;
@@ -10,10 +11,15 @@ namespace Infrastructure.Repository
         private readonly DBContext _db;
         private readonly INotification _Notification;
 
-        public LoginRepository(DBContext db, INotification notification) : base(db)
+        public LoginRepository(DBContext db, INotification notification, IUsuario usuario) : base(db)
         {
             _db = db;
             _Notification = notification;
+        }
+
+        public  User? GetUserId(int id)
+        {
+            return  _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
         }
 
         public Log GetByUsername(string username)

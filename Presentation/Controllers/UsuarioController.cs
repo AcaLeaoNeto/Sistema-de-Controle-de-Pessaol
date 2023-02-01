@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Presentation.Controllers
 {
         [Route("api/[controller]")]
-        [ApiController, Authorize]
+        [ApiController]
         public class UsuarioController : ControllerBase
         {
         private readonly IUsuario _usuario;
@@ -47,8 +47,8 @@ namespace Presentation.Controllers
             }
         }
 
-        [HttpGet("id")]
-            public ActionResult<List<User>> GetUsuario([FromBody] int id)
+        [HttpGet("{id}")]
+            public ActionResult<List<User>> GetUsuario(int id)
             {
                 try
                 {
@@ -64,7 +64,7 @@ namespace Presentation.Controllers
                 }
             }
 
-        [HttpPost, Authorize(Roles = "Manager")]
+        [HttpPost]
             public async Task<ActionResult<List<User>>> AddUsuario([FromBody] UserDto user)
             {
                 if (!ModelState.IsValid)
@@ -101,7 +101,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpDelete("id"), Authorize(Roles = "Manager")]
+            [HttpDelete("id")]
             public async Task<ActionResult<User>> DeletarUsuario([FromBody] int id)
             {
                 try
@@ -118,7 +118,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpPatch("Desativar/id"), Authorize(Roles = "Manager")]
+            [HttpPatch("Desativar/id")]
             public async Task<ActionResult<User>> DesativarUsuario([FromBody] int id)
             {
                 try

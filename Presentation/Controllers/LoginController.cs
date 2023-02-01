@@ -21,7 +21,7 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpPost("register"),Authorize(Roles = "Manager")]
+        [HttpPost("register")]
         public async Task<ActionResult<string>> Register([FromBody] SingOn request)
         {
             if (request is null)

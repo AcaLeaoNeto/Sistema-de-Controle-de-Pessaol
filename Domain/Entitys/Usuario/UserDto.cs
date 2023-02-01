@@ -12,5 +12,7 @@ namespace Domain.Entitys.Usuario
 
         [Required]
         public string Sexo { get; set; } = string.Empty;
+        [Required]
+        public string Setor { get; set; } = string.Empty;
     }
 }

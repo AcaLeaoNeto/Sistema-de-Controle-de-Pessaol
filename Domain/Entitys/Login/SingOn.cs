@@ -1,7 +1,6 @@
 ﻿using Domain.Notifications;
 using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace Domain.Entitys.Login
 {

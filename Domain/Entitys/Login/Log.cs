@@ -6,7 +6,7 @@ namespace Domain.Entitys.Login
 {
     public class Log
     {
-        public Log(string username, byte[] passwordHash, byte[] passwordSalt, string role, int userId)
+        public Log(string username, byte[] passwordHash, byte[] passwordSalt, string role, Guid userId)
         {
             Username = username;
             PasswordHash = passwordHash;
@@ -15,9 +15,9 @@ namespace Domain.Entitys.Login
             UserId = userId;
         }
 
-        [Required, Key, Index]
-        public int Id { get; set; }
-        [Index(IsUnique = true), Required]
+        [Required]
+        public Guid Id { get; set; }
+        [Required]
         public string Username { get; set; } = string.Empty;
         [Required]
         public byte[] PasswordHash { get; set; }
@@ -26,6 +26,7 @@ namespace Domain.Entitys.Login
         [Required]
         public string Role { get; set; } = string.Empty;
         public User User { get; set; }
-        public int UserId { get; set; }
+        [ForeignKey("User")]
+        public Guid UserId { get; set; }
     }
 }

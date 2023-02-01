@@ -2,27 +2,33 @@
 using Domain.Enums;
 using Domain.Notifications;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace Domain.Entitys.Usuario
 {
     public class User
     {
-        public User(string name, DateTime dataDeNacimento, string sexo)
+        public User(string name, DateTime dataDeNacimento, string sexo, string setor)
         {
             Name = name;
             DataDeNacimento = dataDeNacimento;
             Sexo = sexo;
             Idade = CalcularIdade(dataDeNacimento);
+            Setor = setor;
         }
 
         public static explicit operator User(UserDto dto)
         {
-            return new User(dto.Name, dto.DataDeNacimento, dto.Sexo);
+            return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
         }
 
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CodigoUsuario { get; set; }
         [Required, MinLength(1), MaxLength(85)]
         public string Name { get; set; } = string.Empty;
         [Required]
@@ -30,6 +36,7 @@ namespace Domain.Entitys.Usuario
         [Required]
         public string Sexo { get; set; } = string.Empty;
         public int Idade { get; set; }
+        public string Setor { get; set; }
         [JsonIgnore]
         public Log Log { get; set; }
         public bool Ativo { get; set; } = true;
@@ -44,7 +51,10 @@ namespace Domain.Entitys.Usuario
                 notification.AddMessage(" Erro, Usuario precisa ser maior de idade ");
 
             if (!ValidarSexo())
-                notification.AddMessage(" Erro, Os generos incorreto");
+                notification.AddMessage(" Erro, Generos incorreto");
+
+            if (!ValidarSetor())
+                notification.AddMessage(" Erro, Setor inexistente");
 
             return notification.Valid;
         }
@@ -62,6 +72,11 @@ namespace Domain.Entitys.Usuario
         private bool ValidarSexo()
         {
             return new List<string>(Enum.GetNames(typeof(Generos))).Contains(Sexo);
+        }
+
+        private bool ValidarSetor()
+        {
+            return new List<string>(Enum.GetNames(typeof(Setores))).Contains(Setor);
         }
 
         private int CalcularIdade(DateTime Nacimento)

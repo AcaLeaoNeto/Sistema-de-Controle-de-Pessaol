@@ -20,7 +20,7 @@ namespace Infrastructure.Repository
 
         public async Task<bool> DesativarUsuario(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.Id == id && u.Ativo == true);
+            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id && u.Ativo == true);
             if (user is null)
                 return false;
 
@@ -33,7 +33,7 @@ namespace Infrastructure.Repository
 
         public async Task<List<User>?> ApagarUsuario(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.Id == id);
+            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
             if (user is null)
                 return null;
 
@@ -56,7 +56,7 @@ namespace Infrastructure.Repository
 
         public User UsuarioById(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.Id == id && u.Ativo == true);
+            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id && u.Ativo == true);
             if (user is null)
                 return null;
 

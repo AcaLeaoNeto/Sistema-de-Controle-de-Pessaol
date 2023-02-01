@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using Domain.Entitys.Login;
 using Domain.Interfaces;
 using Domain.Notifications;
+using Domain.Entitys.Usuario;
+using Infrastructure.Context;
 
 namespace Services.LoginServices
 {
@@ -14,14 +16,16 @@ namespace Services.LoginServices
 
         private readonly IConfiguration _configuration;
         private readonly ILogin _login;
+        private readonly DBContext _db;
         private readonly INotification _notification;
 
 
-        public LoginServices(IConfiguration configuration, ILogin login, INotification notification)
+        public LoginServices(IConfiguration configuration, ILogin login, INotification notification, DBContext db)
         {
             _configuration = configuration;
             _login = login;
             _notification = notification;
+            _db = db;
         }
 
 
@@ -33,9 +37,11 @@ namespace Services.LoginServices
 
             if (request.Validation(_notification))
             {
+                var user = _login.GetUserId(request.UserId);
+
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, request.UserId);
+                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, user.Id);
                 var result = _login.RegisterLog(Newlog);
 
                 return result;

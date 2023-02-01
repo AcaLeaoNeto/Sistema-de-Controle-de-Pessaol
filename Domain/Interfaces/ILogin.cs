@@ -1,4 +1,5 @@
 ﻿using Domain.Entitys.Login;
+using Domain.Entitys.Usuario;
 
 namespace Domain.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Domain.Interfaces
     {
         string RegisterLog(Log LogForm);
         Log GetByUsername(string username);
+        User GetUserId(int id);
     }
 }
