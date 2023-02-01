@@ -48,6 +48,12 @@ namespace Infrastructure.Repository
             return users;
         }
 
+        public async Task<List<User>> UsuariosDesativos()
+        {
+            var users = await _db.usuarios.Where(u => u.Ativo == false).ToListAsync();
+            return users;
+        }
+
         public User UsuarioById(int id)
         {
             var user = _db.usuarios.FirstOrDefault(u => u.Id == id && u.Ativo == true);

@@ -21,8 +21,8 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpPost("register")]
-        public async Task<ActionResult<string>> Register(SingOn request)
+        [HttpPost("register"),Authorize(Roles = "Manager")]
+        public async Task<ActionResult<string>> Register([FromBody] SingOn request)
         {
             if (request is null)
                 return BadRequest("Formulario em branco");
@@ -45,7 +45,7 @@ namespace Presentation.Controllers
             
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(SingIn request)
+        public async Task<ActionResult<string>> Login([FromBody] SingIn request)
         {
             try
             {

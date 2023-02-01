@@ -7,6 +7,7 @@ namespace Domain.Interfaces
         Task<bool> DesativarUsuario(int id);
         Task<List<User>?> ApagarUsuario(int id);
         Task<List<User>> UsuariosAtivos();
+        Task<List<User>> UsuariosDesativos();
         User UsuarioById(int id);
         Task<List<User>> Cadastro(UserDto obj);
         Task<List<User>> Alterar(User obj);

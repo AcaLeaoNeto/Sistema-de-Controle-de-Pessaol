@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Presentation.Controllers
 {
         [Route("api/[controller]")]
-        [ApiController]
+        [ApiController, Authorize]
         public class UsuarioController : ControllerBase
         {
         private readonly IUsuario _usuario;
@@ -33,7 +33,21 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpGet("{id}")]
+        [HttpGet("Desativados")]
+        public async Task<ActionResult<List<User>>> GetDesativosUsuarios()
+        {
+            try
+            {
+                var DesativosUsers = await _usuario.UsuariosDesativos();
+                return Ok(DesativosUsers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("id")]
             public ActionResult<List<User>> GetUsuario([FromBody] int id)
             {
                 try
@@ -50,7 +64,7 @@ namespace Presentation.Controllers
                 }
             }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Manager")]
             public async Task<ActionResult<List<User>>> AddUsuario([FromBody] UserDto user)
             {
                 if (!ModelState.IsValid)
@@ -87,7 +101,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpDelete("{id}"), Authorize(Roles = "Manager")]
+            [HttpDelete("id"), Authorize(Roles = "Manager")]
             public async Task<ActionResult<User>> DeletarUsuario([FromBody] int id)
             {
                 try
@@ -104,7 +118,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpPatch("Desativar/{id}"), Authorize(Roles = "Manager")]
+            [HttpPatch("Desativar/id"), Authorize(Roles = "Manager")]
             public async Task<ActionResult<User>> DesativarUsuario([FromBody] int id)
             {
                 try
