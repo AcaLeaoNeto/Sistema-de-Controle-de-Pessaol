@@ -3,6 +3,9 @@ using Domain.Interfaces;
 using Domain.Notifications;
 using Domain.Entitys.Usuario;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -19,7 +22,7 @@ namespace Presentation.Controllers
                 _notification = notification;
             }
 
-            [HttpGet]
+            [HttpGet, Authorize]
             public async Task<ActionResult<List<User>>> GetAllUsuarios()
             {
                 try
@@ -33,21 +36,21 @@ namespace Presentation.Controllers
                 }
             }
 
-        [HttpGet("Desativados")]
-        public async Task<ActionResult<List<User>>> GetDesativosUsuarios()
-        {
-            try
+            [HttpGet("Desativados")]
+            public async Task<ActionResult<List<User>>> GetDesativosUsuarios()
             {
-                var DesativosUsers = await _usuario.UsuariosDesativos();
-                return Ok(DesativosUsers);
+                try
+                {
+                    var DesativosUsers = await _usuario.UsuariosDesativos();
+                    return Ok(DesativosUsers);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpGet("{id}")]
+            [HttpGet("{id}")]
             public ActionResult<List<User>> GetUsuario(int id)
             {
                 try
@@ -64,7 +67,7 @@ namespace Presentation.Controllers
                 }
             }
 
-        [HttpPost]
+            [HttpPost]
             public async Task<ActionResult<List<User>>> AddUsuario([FromBody] UserDto user)
             {
                 if (!ModelState.IsValid)

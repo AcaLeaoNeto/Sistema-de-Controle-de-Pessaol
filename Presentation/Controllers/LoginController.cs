@@ -3,7 +3,7 @@ using Services.LoginServices;
 using Domain.Entitys.Login;
 using Domain.Notifications;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
+using System.Security.Claims;
 
 namespace Presentation.Controllers
 {
@@ -11,6 +11,7 @@ namespace Presentation.Controllers
     [ApiController]
     public class LoginController : Controller
     {
+
         private readonly ILoginServices _Login;
         private readonly INotification _Notification;
 
@@ -24,6 +25,7 @@ namespace Presentation.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<string>> Register([FromBody] SingOn request)
         {
+
             if (request is null)
                 return BadRequest("Formulario em branco");
 
@@ -45,8 +47,9 @@ namespace Presentation.Controllers
             
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] SingIn request)
+        public async Task<ActionResult<LogResponse>> Login([FromBody] SingIn request)
         {
+
             try
             {
                 var response = _Login.Login(request);
@@ -61,5 +64,27 @@ namespace Presentation.Controllers
             }
 
         }
+
+        [HttpPost("RefreshLogin"), Authorize]
+        public async Task<ActionResult<LogResponse>> RefeshLogin([FromBody] string request)
+        {
+
+            try
+            {
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var response = _Login.RefreshAcess(request, identity.Claims);
+                if (_Notification.Valid)
+                    return response;
+                else
+                    return BadRequest(_Notification.Messages);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
     }
+
 }

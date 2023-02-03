@@ -1,11 +1,12 @@
 ﻿using Domain.Entitys.Login;
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Services.LoginServices
 {
     public interface ILoginServices
     {
-        string Login(SingIn request);
+        LogResponse Login(SingIn request);
         string Register(SingOn request);
+        LogResponse RefreshAcess(string acess, IEnumerable<Claim> refresh);
     }
 }

@@ -25,6 +25,7 @@ namespace Domain.Entitys.Usuario
         }
 
         [Required]
+        [JsonIgnore]
         public Guid Id { get; set; }
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
