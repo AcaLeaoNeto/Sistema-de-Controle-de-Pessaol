@@ -39,7 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(builder.Configuration.GetSection("Setting:TKPrivate").Value)),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            ClockSkew = TimeSpan.Zero
         };
     });
 

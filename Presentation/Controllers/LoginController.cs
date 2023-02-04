@@ -23,7 +23,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<string>> Register([FromBody] SingOn request)
+        public async Task<ActionResult<object>> Register([FromBody] SingOn request)
         {
 
             if (request is null)

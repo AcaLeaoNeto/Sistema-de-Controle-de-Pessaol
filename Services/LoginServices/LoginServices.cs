@@ -25,15 +25,15 @@ namespace Services.LoginServices
 
 
 
-        public string Register(SingOn request)
+        public object Register(SingOn request)
         {
             if (_login.GetByUsername(request.Username) is not null)
                 _notification.AddMessage("Log já Cadastrado");
 
+            var user = _login.GetUserId(request.UserId);
+            
             if (request.Validation(_notification))
             {
-                var user = _login.GetUserId(request.UserId);
-
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
                 var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, user.Id);
@@ -42,7 +42,7 @@ namespace Services.LoginServices
                 return result;
             }
 
-            return "Erro";
+            return null;
         }
 
         public LogResponse Login(SingIn request)
@@ -78,31 +78,34 @@ namespace Services.LoginServices
             var AtSplit = acess.Split(".");
             var AcessTk = new JwtSecurityTokenHandler().ReadJwtToken(acess);
 
+
+            if(AcessTk.ValidTo.Second < DateTime.Now.Second)
+            {
+                _notification.AddMessage("Token Icorreto");
+                return null;
+            }
+                
             var ExpAt = AcessTk.Claims.First(x => x.Type == "exp").Value;
             var Atk = refresh.First(x => x.Type == "Atk").Value;
             var Ate = refresh.First(x => x.Type == "Ate").Value;
 
-
-            if(AcessTk.ValidTo > DateTime.Now)
-                _notification.AddMessage("Token Ivalido");
-
-            if(Ate == ExpAt && AtSplit[2] == Atk)
+            if(Ate != ExpAt || AtSplit[2] != Atk)
             {
-                var userClaims = new List<Claim>
+                _notification.AddMessage("Token Ivalido");
+                return null;
+            }
+
+            var userClaims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, 
+                    new Claim(ClaimTypes.Name,
                         AcessTk.Claims.First(x => x.Type == ClaimTypes.Name).Value),
 
                     new Claim(ClaimTypes.Role,
                         AcessTk.Claims.First(x => x.Type == ClaimTypes.Role).Value)
                 };
-                   
 
-                var response = CreateToken(userClaims);
-                return response;
-            }
-
-            return null;
+            var response = CreateToken(userClaims);
+            return response;
         }
 
 

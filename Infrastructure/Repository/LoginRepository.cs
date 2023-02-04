@@ -19,7 +19,16 @@ namespace Infrastructure.Repository
 
         public  User? GetUserId(int id)
         {
-            return  _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
+            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
+
+            if (user is null)
+            {
+                _Notification.AddMessage("Formulario invalido");
+                return null;
+            }
+
+            return user;
+            
         }
 
         public Log GetByUsername(string username)
