@@ -78,10 +78,9 @@ namespace Services.LoginServices
             var AtSplit = acess.Split(".");
             var AcessTk = new JwtSecurityTokenHandler().ReadJwtToken(acess);
 
-
-            if(AcessTk.ValidTo.Second < DateTime.Now.Second)
+            if(AcessTk.ValidTo < DateTime.Now)
             {
-                _notification.AddMessage("Token Icorreto");
+                _notification.AddMessage("Token Incorreto");
                 return null;
             }
                 
@@ -148,7 +147,7 @@ namespace Services.LoginServices
 
             var Acess = new JwtSecurityToken(
                 claims: AcessClaims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddSeconds(1),
                 signingCredentials: creds);
 
             var AcessToken = new JwtSecurityTokenHandler().WriteToken(Acess);
