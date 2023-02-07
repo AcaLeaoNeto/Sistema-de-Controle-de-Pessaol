@@ -27,16 +27,19 @@ namespace Services.LoginServices
 
         public object Register(SingOn request)
         {
-            if (_login.GetByUsername(request.Username) is not null)
+            if (_login.AnyLog(request.Username))
+            {
                 _notification.AddMessage("Log já Cadastrado");
-
-            var user = _login.GetUserId(request.UserId);
+                return null;
+            }
             
-            if (request.Validation(_notification))
+            var userGuid = _login.GetUserId(request.UserId);
+            
+            if (_notification.Valid)
             {
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, user.Id);
+                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, userGuid);
                 var result = _login.RegisterLog(Newlog);
 
                 return result;
@@ -45,10 +48,11 @@ namespace Services.LoginServices
             return null;
         }
 
+
         public LogResponse Login(SingIn request)
         {
 
-            var TryLog = _login.GetByUsername(request.Username);
+            var TryLog = _login.GetLogByUsername(request.Username);
 
             if (TryLog is null)
             {
@@ -147,7 +151,7 @@ namespace Services.LoginServices
 
             var Acess = new JwtSecurityToken(
                 claims: AcessClaims,
-                expires: DateTime.Now.AddSeconds(1),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: creds);
 
             var AcessToken = new JwtSecurityTokenHandler().WriteToken(Acess);

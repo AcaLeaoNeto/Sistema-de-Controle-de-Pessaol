@@ -17,25 +17,30 @@ namespace Infrastructure.Repository
             _Notification = notification;
         }
 
-        public  User? GetUserId(int id)
+        public  Guid? GetUserId(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
+            var userGuid = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id).Id;
 
-            if (user is null)
+            if (userGuid == null || userGuid == Guid.Empty)
             {
                 _Notification.AddMessage("Formulario invalido");
                 return null;
             }
 
-            return user;
+            return userGuid;
             
         }
 
-        public Log GetByUsername(string username)
+        public  bool AnyLog(string username)
+        {     
+            return  _db.Logs.Any(l => l.Username == username);
+        }
+
+        public Log? GetLogByUsername(string username)
         {
-            var TryLog =  _db.Logs.FirstOrDefault(l => l.Username == username);
+            var TryLog = _db.Logs.FirstOrDefault(l => l.Username == username);
             if (TryLog is null)
-                return null;     
+                return null;
 
             return TryLog;
         }

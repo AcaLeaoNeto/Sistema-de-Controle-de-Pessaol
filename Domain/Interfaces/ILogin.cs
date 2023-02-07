@@ -6,7 +6,8 @@ namespace Domain.Interfaces
     public interface ILogin : IBase<Log>
     {
         string RegisterLog(Log LogForm);
-        Log GetByUsername(string username);
-        User GetUserId(int id);
+        Log GetLogByUsername(string username);
+        Guid GetUserId(int id);
+        bool AnyLog(string username);
     }
 }
