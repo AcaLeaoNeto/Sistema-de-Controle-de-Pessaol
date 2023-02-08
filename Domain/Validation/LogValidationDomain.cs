@@ -13,24 +13,24 @@ namespace Domain.Validation
                 .NotEmpty()
                     .WithMessage("Senha é obrigatoria")
 
-                .Length(8)
+                .MinimumLength(8)
                     .WithMessage("Senha deve conter pelo menos 8 caracteres")
 
-                .Must(l => (l.Any(c => char.IsDigit(c))))
-                    .WithMessage("Senha deve conter pelo menos um numero")
-
-                .Must(l => (l.Any(c => char.IsUpper(c))))
+                .Matches("[A-Z]")
                     .WithMessage("Senha deve conter pelo menos um numero maiúscula")
 
-                .Must(l => (l.Any(c => !Char.IsLetterOrDigit(c))))
-                    .WithMessage("Senha deve conter pelo menos um carácter especial")
+                .Matches("[a-z]")
+                    .WithMessage("Senha deve conter pelo menos uma letra")
 
-                .Must(l => (l.Any(c => char.IsLetter(c))))
-                    .WithMessage("Senha deve conter pelo menos uma letra");
+                .Matches("[0-9]")
+                    .WithMessage("Senha deve conter pelo menos um numero")
+
+                .Matches("[^a-zA-Z0-9]")
+                    .WithMessage("Senha deve conter pelo menos um carácter especial");
 
 
             RuleFor(l => l.Role)
-                .Must(l => (Enum.GetNames(typeof(Roles))).Contains(l))
+                .IsEnumName(typeof(Roles), caseSensitive: false)
                     .WithMessage("Concessão Invalida");
         }
     }

@@ -17,18 +17,17 @@ namespace Infrastructure.Repository
             _Notification = notification;
         }
 
-        public  Guid? GetUserId(int id)
+        public  Guid GetUserId(int id)
         {
             var userGuid = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id).Id;
 
             if (userGuid == null || userGuid == Guid.Empty)
             {
                 _Notification.AddMessage("Formulario invalido");
-                return null;
+                return Guid.Empty;
             }
 
             return userGuid;
-            
         }
 
         public  bool AnyLog(string username)
