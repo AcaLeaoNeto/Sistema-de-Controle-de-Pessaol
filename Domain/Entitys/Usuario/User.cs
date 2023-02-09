@@ -42,44 +42,6 @@ namespace Domain.Entitys.Usuario
         public Log Log { get; set; }
         public bool Ativo { get; set; } = true;
 
-
-        public bool Validation(INotification notification)
-        {
-            if (!ValidarData())
-                notification.AddMessage(" Erro, Data Inválida ");
-
-            if (!ValidarIdade())
-                notification.AddMessage(" Erro, Usuario precisa ser maior de idade ");
-
-            if (!ValidarSexo())
-                notification.AddMessage(" Erro, Generos incorreto");
-
-            if (!ValidarSetor())
-                notification.AddMessage(" Erro, Setor inexistente");
-
-            return notification.Valid;
-        }
-
-        private bool ValidarData()
-        {
-            return DataDeNacimento <= DateTime.Now;
-        }
-
-        private bool ValidarIdade()
-        {
-            return CalcularIdade(DataDeNacimento) >= 18;
-        }
-
-        private bool ValidarSexo()
-        {
-            return new List<string>(Enum.GetNames(typeof(Generos))).Contains(Sexo);
-        }
-
-        private bool ValidarSetor()
-        {
-            return new List<string>(Enum.GetNames(typeof(Setores))).Contains(Setor);
-        }
-
         private int CalcularIdade(DateTime Nacimento)
         {
             var idade = DateTime.Now.Year - Nacimento.Year;

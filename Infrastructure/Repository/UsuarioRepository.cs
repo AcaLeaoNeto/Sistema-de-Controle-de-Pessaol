@@ -65,21 +65,33 @@ namespace Infrastructure.Repository
 
         public async Task<List<User>> Cadastro(UserDto obj)
         {
-            var user = (User)obj;
-
-            if(user.Validation(_notification))
+            try
+            {
+                var user = (User)obj;
                 Insert(user);
 
-            return await UsuariosAtivos();
+                return await UsuariosAtivos();
+            }
+            catch (Exception)
+            {
+                _notification.AddMessage("Erro na execução");
+                return null;
+            }
         }
 
         public async Task<List<User>> Alterar(User obj)
         {
-
-            if (obj.Validation(_notification))
+            try
+            {
                 Update(obj);
 
-            return await UsuariosAtivos();
+                return await UsuariosAtivos();
+            }
+            catch (Exception)
+            {
+                _notification.AddMessage("Erro na execução");
+                return null;
+            }
         }
     }
 }

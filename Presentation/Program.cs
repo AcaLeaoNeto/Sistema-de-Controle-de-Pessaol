@@ -9,18 +9,23 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
-using System.Reflection;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-    .AddFluentValidation( v => v.RegisterValidatorsFromAssemblyContaining<LogValidationDomain>());
+builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation()
+        .AddFluentValidationClientsideAdapters()
+        .AddValidatorsFromAssemblyContaining<IValidations>();
+
 //Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -34,7 +39,6 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-//builder.Services.AddFluentValidation(c => c.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()) );
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -50,12 +54,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 builder.Services.AddScoped<IUsuario, UsuarioRepository>();
 builder.Services.AddScoped<ILogin, LoginRepository>();
 builder.Services.AddScoped<INotification, Notificaion>();
 builder.Services.AddScoped<ILoginServices, LoginServices>();
 builder.Services.AddDbContext<DBContext>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -63,6 +70,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

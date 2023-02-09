@@ -1,13 +1,14 @@
 ﻿using Domain.Entitys.Login;
 using Domain.Enums;
+using Domain.Interfaces;
 using FluentValidation;
 using System.Data;
 
 namespace Domain.Validation
 {
-    public class LogValidationDomain : AbstractValidator<SingOn>
+    public class LogValidation : AbstractValidator<SingOn> ,IValidations
     {
-        public LogValidationDomain()
+        public LogValidation()
         {
             RuleFor(l => l.Password)
                 .NotEmpty()
