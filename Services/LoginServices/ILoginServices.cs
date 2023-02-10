@@ -1,12 +1,13 @@
-﻿using Domain.Entitys.Login;
+﻿using Domain.Entitys.Base;
+using Domain.Entitys.Login;
 using System.Security.Claims;
 
 namespace Services.LoginServices
 {
     public interface ILoginServices
     {
-        LogResponse Login(SingIn request);
-        object Register(SingOn request);
-        LogResponse RefreshAcess(string acess, IEnumerable<Claim> refresh);
+        SingInResponse Login(SingIn request);
+        BaseResponse Register(SingOn request);
+        SingInResponse RefreshAcess(string acess, IEnumerable<Claim> refresh);
     }
 }

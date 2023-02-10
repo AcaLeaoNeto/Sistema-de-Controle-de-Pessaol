@@ -1,4 +1,5 @@
-﻿using Domain.Entitys.Login;
+﻿using Domain.Entitys.Base;
+using Domain.Entitys.Login;
 using Domain.Entitys.Usuario;
 using Domain.Interfaces;
 using Domain.Notifications;
@@ -44,7 +45,7 @@ namespace Infrastructure.Repository
             return TryLog;
         }
 
-        public string RegisterLog(Log LogForm)
+        public BaseResponse RegisterLog(Log LogForm)
         {
             try
             {
@@ -55,7 +56,7 @@ namespace Infrastructure.Repository
                 _Notification.AddMessage("Formulario invalido");
             }
             
-            return "Log Registrado";
+            return new BaseResponse();
         }
 
 

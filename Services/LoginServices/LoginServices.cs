@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using Domain.Entitys.Login;
 using Domain.Interfaces;
 using Domain.Notifications;
+using Domain.Entitys.Base;
 
 namespace Services.LoginServices
 {
@@ -13,34 +14,34 @@ namespace Services.LoginServices
     {
 
         private readonly IConfiguration _configuration;
-        private readonly ILogin _login;
+        private readonly ILogin _loginRepository;
         private readonly INotification _notification;
 
         public LoginServices(IConfiguration configuration, ILogin login,INotification notification)
         {
             _configuration = configuration;
-            _login = login;
+            _loginRepository = login;
             _notification = notification;
         }
 
 
 
-        public object Register(SingOn request)
+        public BaseResponse Register(SingOn request)
         {
-            if (_login.AnyLog(request.Username))
+            if (_loginRepository.AnyLog(request.Username))
             {
                 _notification.AddMessage("Log já Cadastrado");
                 return null;
             }
             
-            var userGuid = _login.GetUserId(request.UserId);
+            var userGuid = _loginRepository.GetUserId(request.UserId);
             
             if (_notification.Valid)
             {
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
                 var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, userGuid);
-                var result = _login.RegisterLog(Newlog);
+                var result = _loginRepository.RegisterLog(Newlog);
 
                 return result;
             }
@@ -49,10 +50,10 @@ namespace Services.LoginServices
         }
 
 
-        public LogResponse Login(SingIn request)
+        public SingInResponse Login(SingIn request)
         {
 
-            var TryLog = _login.GetLogByUsername(request.Username);
+            var TryLog = _loginRepository.GetLogByUsername(request.Username);
 
             if (TryLog is null)
             {
@@ -77,7 +78,7 @@ namespace Services.LoginServices
         }
 
 
-        public LogResponse RefreshAcess(string acess, IEnumerable<Claim> refresh)
+        public SingInResponse RefreshAcess(string acess, IEnumerable<Claim> refresh)
         {
             var AtSplit = acess.Split(".");
             var AcessTk = new JwtSecurityTokenHandler().ReadJwtToken(acess);
@@ -134,7 +135,7 @@ namespace Services.LoginServices
 
 
 
-        private LogResponse CreateToken(List<Claim> userClaims)
+        private SingInResponse CreateToken(List<Claim> userClaims)
         {            
             
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -173,7 +174,7 @@ namespace Services.LoginServices
 
 
 
-            return new LogResponse(AcessToken, RefreshToken);
+            return new SingInResponse(AcessToken, RefreshToken);
         }
     }
 }

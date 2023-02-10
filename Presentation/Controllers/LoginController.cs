@@ -4,6 +4,7 @@ using Domain.Entitys.Login;
 using Domain.Notifications;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Domain.Entitys.Base;
 
 namespace Presentation.Controllers
 {
@@ -23,7 +24,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<object>> Register([FromBody] SingOn request)
+        public async Task<ActionResult<BaseResponse>> Register([FromBody] SingOn request)
         {
 
             if (request is null)
@@ -34,7 +35,7 @@ namespace Presentation.Controllers
                 var result = _Login.Register(request);
 
                 if (_Notification.Valid)
-                    return result;
+                    return Ok(result);
                 else
                     return BadRequest(_Notification.Messages);
             }
@@ -47,14 +48,14 @@ namespace Presentation.Controllers
             
 
         [HttpPost("login")]
-        public async Task<ActionResult<LogResponse>> Login([FromBody] SingIn request)
+        public async Task<ActionResult<SingInResponse>> Login([FromBody] SingIn request)
         {
 
             try
             {
                 var response = _Login.Login(request);
                 if (_Notification.Valid)
-                    return response; 
+                    return Ok(response); 
                 else
                     return BadRequest(_Notification.Messages);
             }
@@ -66,7 +67,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("RefreshLogin"), Authorize]
-        public async Task<ActionResult<LogResponse>> RefeshLogin([FromBody] string request)
+        public async Task<ActionResult<SingInResponse>> RefeshLogin([FromBody] string request)
         {
 
             try
@@ -74,7 +75,7 @@ namespace Presentation.Controllers
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
                 var response = _Login.RefreshAcess(request, identity.Claims);
                 if (_Notification.Valid)
-                    return response;
+                    return Ok(response);
                 else
                     return BadRequest(_Notification.Messages);
             }
