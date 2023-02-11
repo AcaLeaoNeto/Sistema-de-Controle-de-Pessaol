@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Domain.Entitys.Base;
 
 namespace Presentation.Controllers
 {
@@ -22,7 +23,7 @@ namespace Presentation.Controllers
                 _notification = notification;
             }
 
-            [HttpGet, Authorize]
+            [HttpGet]
             public async Task<ActionResult<List<User>>> GetAllUsuarios()
             {
                 try
@@ -51,7 +52,7 @@ namespace Presentation.Controllers
             }
 
             [HttpGet("{id}")]
-            public ActionResult<List<User>> GetUsuario(int id)
+            public ActionResult<BaseResponse> GetUsuario(int id)
             {
                 try
                 {
@@ -68,7 +69,7 @@ namespace Presentation.Controllers
             }
 
             [HttpPost]
-            public async Task<ActionResult<List<User>>> AddUsuario([FromBody] UserDto user)
+            public async Task<ActionResult<List<BaseResponse>>> AddUsuario(UserDto user)
             {
                 if (!ModelState.IsValid)
                     return BadRequest();
@@ -88,7 +89,7 @@ namespace Presentation.Controllers
             }
 
             [HttpPut]
-            public async Task<ActionResult<User>> AlterarUsuario([FromBody] User user)
+            public async Task<ActionResult<BaseResponse>> AlterarUsuario(User user)
             {
                 try
                 {
@@ -105,7 +106,7 @@ namespace Presentation.Controllers
             }
 
             [HttpDelete("id")]
-            public async Task<ActionResult<User>> DeletarUsuario([FromBody] int id)
+            public async Task<ActionResult<BaseResponse>> DeletarUsuario(int id)
             {
                 try
                 {
@@ -122,15 +123,16 @@ namespace Presentation.Controllers
             }
 
             [HttpPatch("Desativar/id")]
-            public async Task<ActionResult<User>> DesativarUsuario([FromBody] int id)
+            public async Task<ActionResult<BaseResponse>> DesativarUsuario(int id)
             {
                 try
                 {
                     var result = await _usuario.DesativarUsuario(id);
-                    if (result == false)
-                        return NotFound("Usuario Não Encontrado");
-
-                    return Ok($"Usuario Id:{id} Desativado.");
+                    if (_notification.Valid)
+                       return Ok(result); 
+                    
+                    result.ResponseObject = _notification.Messages;
+                    return StatusCode(result.StatusCode); 
                 }
                 catch (Exception ex)
                 {

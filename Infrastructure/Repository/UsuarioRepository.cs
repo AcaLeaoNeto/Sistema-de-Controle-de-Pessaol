@@ -1,4 +1,5 @@
-﻿using Domain.Entitys.Usuario;
+﻿using Domain.Entitys.Base;
+using Domain.Entitys.Usuario;
 using Domain.Interfaces;
 using Domain.Notifications;
 using Infrastructure.Context;
@@ -18,20 +19,24 @@ namespace Infrastructure.Repository
             _notification = notification;
         }
 
-        public async Task<bool> DesativarUsuario(int id)
+        public async Task<BaseResponse> DesativarUsuario(int id)
         {
             var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id && u.Ativo == true);
+
             if (user is null)
-                return false;
+            {
+                _notification.AddMessage("Usuario não encontrado");
+                return new BaseResponse(404, "Erro");
+            }
 
             user.Ativo = false;
             await _db.SaveChangesAsync();
 
-            return true;
+            return new BaseResponse();
         }
     
 
-        public async Task<List<User>?> ApagarUsuario(int id)
+        public async Task<BaseResponse> ApagarUsuario(int id)
         {
             var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
             if (user is null)
@@ -39,38 +44,44 @@ namespace Infrastructure.Repository
 
             Delete(user);
 
-            return await UsuariosAtivos();
+            return new BaseResponse();
         }
 
-        public async Task<List<User>> UsuariosAtivos()
+        public async Task<BaseResponse> UsuariosAtivos()
         {
             var users = await _db.usuarios.Where(u => u.Ativo == true).ToListAsync();
-            return users;
+
+            return new BaseResponse(responseObject: users);
         }
 
-        public async Task<List<User>> UsuariosDesativos()
+        public async Task<BaseResponse> UsuariosDesativos()
         {
             var users = await _db.usuarios.Where(u => u.Ativo == false).ToListAsync();
-            return users;
+
+            var response = new BaseResponse(responseObject: users);
+            response.ResponseObject = users;
+            return response;
         }
 
-        public User UsuarioById(int id)
+        public async Task<BaseResponse> UsuarioById(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id && u.Ativo == true);
+            var user = await  _db.usuarios.FirstOrDefaultAsync(u => u.CodigoUsuario == id && u.Ativo == true);
             if (user is null)
                 return null;
 
-            return user;
+            var response = new BaseResponse(responseObject: user);
+            response.ResponseObject = user;
+            return response;
         }
 
-        public async Task<List<User>> Cadastro(UserDto obj)
+        public async Task<BaseResponse> Cadastro(UserDto obj)
         {
             try
             {
                 var user = (User)obj;
                 Insert(user);
 
-                return await UsuariosAtivos();
+                return new BaseResponse();
             }
             catch (Exception)
             {
@@ -79,13 +90,13 @@ namespace Infrastructure.Repository
             }
         }
 
-        public async Task<List<User>> Alterar(User obj)
+        public async Task<BaseResponse> Alterar(User obj)
         {
             try
             {
                 Update(obj);
 
-                return await UsuariosAtivos();
+                return new BaseResponse();
             }
             catch (Exception)
             {

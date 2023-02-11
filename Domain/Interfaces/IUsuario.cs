@@ -1,15 +1,16 @@
-﻿using Domain.Entitys.Usuario;
+﻿using Domain.Entitys.Base;
+using Domain.Entitys.Usuario;
 
 namespace Domain.Interfaces
 {
     public interface IUsuario : IBase<User>
     {
-        Task<bool> DesativarUsuario(int id);
-        Task<List<User>?> ApagarUsuario(int id);
-        Task<List<User>> UsuariosAtivos();
-        Task<List<User>> UsuariosDesativos();
-        User UsuarioById(int id);
-        Task<List<User>> Cadastro(UserDto obj);
-        Task<List<User>> Alterar(User obj);
+        Task<BaseResponse> DesativarUsuario(int id);
+        Task<BaseResponse> ApagarUsuario(int id);
+        Task<BaseResponse> UsuariosAtivos();
+        Task<BaseResponse> UsuariosDesativos();
+        Task<BaseResponse> UsuarioById(int id);
+        Task<BaseResponse> Cadastro(UserDto obj);
+        Task<BaseResponse> Alterar(User obj);
     }
 }
