@@ -3,8 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entitys.Usuario
 {
-    public class UserDto
+    public class UserChange
     {
+        public int id { get; set; }
         [Required, MaxLength(85, ErrorMessage = "Nome no maximo 85 caracteres")]
         public string Name { get; set; } = string.Empty;
 

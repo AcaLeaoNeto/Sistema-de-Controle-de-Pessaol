@@ -21,8 +21,6 @@ namespace Infrastructure.Context
         {
             modelBuilder.Entity<Log>()
                 .HasIndex(L => L.Username).IsUnique();
-            modelBuilder.Entity<User>()
-                .HasIndex(U => U.CodigoUsuario).IsUnique();
         }
 
         public DbSet<User> usuarios { get; set; }

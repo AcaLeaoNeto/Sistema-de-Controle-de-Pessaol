@@ -6,7 +6,7 @@ namespace Domain.Entitys.Login
 {
     public class Log
     {
-        public Log(string username, byte[] passwordHash, byte[] passwordSalt, string role, Guid userId)
+        public Log(string username, byte[] passwordHash, byte[] passwordSalt, string role, int userId)
         {
             Username = username;
             PasswordHash = passwordHash;
@@ -27,6 +27,6 @@ namespace Domain.Entitys.Login
         public string Role { get; set; } = string.Empty;
         public User User { get; set; }
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Infrastructure.Repository
 
         public async Task<BaseResponse> DesativarUsuario(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id && u.Ativo == true);
+            var user = _db.usuarios.FirstOrDefault(u => u.Id == id && u.Ativo == true);
 
             if (user is null)
             {
@@ -38,9 +38,12 @@ namespace Infrastructure.Repository
 
         public async Task<BaseResponse> ApagarUsuario(int id)
         {
-            var user = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id);
+            var user = _db.usuarios.FirstOrDefault(u => u.Id == id);
             if (user is null)
-                return null;
+            {
+                _notification.AddMessage("Usuario não encontrado");
+                return new BaseResponse(404, "Erro");
+            }
 
             Delete(user);
 
@@ -54,25 +57,27 @@ namespace Infrastructure.Repository
             return new BaseResponse(responseObject: users);
         }
 
+
         public async Task<BaseResponse> UsuariosDesativos()
         {
             var users = await _db.usuarios.Where(u => u.Ativo == false).ToListAsync();
 
-            var response = new BaseResponse(responseObject: users);
-            response.ResponseObject = users;
-            return response;
+            return new BaseResponse(responseObject: users);
         }
+
 
         public async Task<BaseResponse> UsuarioById(int id)
         {
-            var user = await  _db.usuarios.FirstOrDefaultAsync(u => u.CodigoUsuario == id && u.Ativo == true);
+            var user = await  _db.usuarios.FirstOrDefaultAsync(u => u.Id == id && u.Ativo == true);
             if (user is null)
-                return null;
+            {
+                _notification.AddMessage("Usuario não encontrado");
+                return new BaseResponse(404, "Erro");
+            }
 
-            var response = new BaseResponse(responseObject: user);
-            response.ResponseObject = user;
-            return response;
+            return new BaseResponse(responseObject: user);
         }
+
 
         public async Task<BaseResponse> Cadastro(UserDto obj)
         {
@@ -83,26 +88,30 @@ namespace Infrastructure.Repository
 
                 return new BaseResponse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _notification.AddMessage("Erro na execução");
-                return null;
+                _notification.AddMessage(ex.Message);
+                return new BaseResponse(400, "Erro");
             }
         }
 
-        public async Task<BaseResponse> Alterar(User obj)
+
+        public async Task<BaseResponse> Alterar(UserChange obj)
         {
             try
             {
-                Update(obj);
+                var user = (User)obj;
+                user.Id = obj.id;
 
+                Update(user);
                 return new BaseResponse();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _notification.AddMessage("Erro na execução");
-                return null;
+                _notification.AddMessage(ex.Message);
+                return new BaseResponse(400, "Erro");
             }
         }
+
     }
 }

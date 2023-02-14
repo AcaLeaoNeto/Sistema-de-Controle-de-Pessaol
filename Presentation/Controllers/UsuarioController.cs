@@ -24,12 +24,11 @@ namespace Presentation.Controllers
             }
 
             [HttpGet]
-            public async Task<ActionResult<List<User>>> GetAllUsuarios()
+            public async Task<ActionResult<BaseResponse>> GetAllUsuarios()
             {
                 try
                 {
-                    var AllUsers = await _usuario.UsuariosAtivos();
-                    return Ok(AllUsers);
+                    return BaseOperation(await _usuario.UsuariosAtivos());
                 }
                 catch (Exception ex)
                 {
@@ -38,12 +37,11 @@ namespace Presentation.Controllers
             }
 
             [HttpGet("Desativados")]
-            public async Task<ActionResult<List<User>>> GetDesativosUsuarios()
+            public async Task<ActionResult<BaseResponse>> GetDesativosUsuarios()
             {
                 try
                 {
-                    var DesativosUsers = await _usuario.UsuariosDesativos();
-                    return Ok(DesativosUsers);
+                    return BaseOperation(await _usuario.UsuariosDesativos());
                 }
                 catch (Exception ex)
                 {
@@ -52,15 +50,11 @@ namespace Presentation.Controllers
             }
 
             [HttpGet("{id}")]
-            public ActionResult<BaseResponse> GetUsuario(int id)
+            public async Task<ActionResult<BaseResponse>> GetUsuarioAsync(int id)
             {
                 try
                 {
-                    var user = _usuario.UsuarioById(id);
-                    if (user is null)
-                        return NotFound("Usuario Não Encontrado");
-
-                    return Ok(user);
+                    return BaseOperation(await _usuario.UsuarioById(id));
                 }
                 catch (Exception ex)
                 {
@@ -69,18 +63,11 @@ namespace Presentation.Controllers
             }
 
             [HttpPost]
-            public async Task<ActionResult<List<BaseResponse>>> AddUsuario(UserDto user)
+            public async Task<ActionResult<BaseResponse>> AddUsuario(UserDto user)
             {
-                if (!ModelState.IsValid)
-                    return BadRequest();
-
                 try
                 {
-                    var users = await _usuario.Cadastro(user);
-                    if (_notification.Valid)
-                        return Ok(users); 
-                    else
-                        return BadRequest(_notification.Messages);
+                    return BaseOperation(await _usuario.Cadastro(user));
                 }
                 catch (Exception ex)
                 {
@@ -89,15 +76,11 @@ namespace Presentation.Controllers
             }
 
             [HttpPut]
-            public async Task<ActionResult<BaseResponse>> AlterarUsuario(User user)
+            public async Task<ActionResult<BaseResponse>> AlterarUsuario(UserChange user)
             {
                 try
                 {
-                    var users = await _usuario.Alterar(user);
-                    if (_notification.Valid)
-                        return Ok(users);
-                    else
-                        return BadRequest(_notification.Messages);
+                    return BaseOperation(await _usuario.Alterar(user));
                 }
                 catch (Exception ex)
                 {
@@ -110,11 +93,7 @@ namespace Presentation.Controllers
             {
                 try
                 {
-                    var users = await _usuario.ApagarUsuario(id);
-                    if (users is null)
-                        return NotFound("Usuario Não Encontrado");
-
-                    return Ok(users);
+                    return BaseOperation(await _usuario.ApagarUsuario(id));
                 }
                 catch (Exception ex)
                 {
@@ -127,17 +106,21 @@ namespace Presentation.Controllers
             {
                 try
                 {
-                    var result = await _usuario.DesativarUsuario(id);
-                    if (_notification.Valid)
-                       return Ok(result); 
-                    
-                    result.ResponseObject = _notification.Messages;
-                    return StatusCode(result.StatusCode); 
+                    return BaseOperation(await _usuario.DesativarUsuario(id));
                 }
                 catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
                 }
+            }
+
+            private ActionResult<BaseResponse> BaseOperation(BaseResponse obj)
+            {
+                if (_notification.Valid)
+                    return Ok(obj);
+
+                obj.ResponseObject = _notification.Messages;
+                return StatusCode(obj.StatusCode, obj);
             }
 
         }

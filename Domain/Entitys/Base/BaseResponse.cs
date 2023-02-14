@@ -13,8 +13,8 @@ namespace Domain.Entitys.Base
         }
 
 
-        public int StatusCode { get; }
-        public string ResponseMessage { get; }
+        public int StatusCode { get; set; }
+        public string ResponseMessage { get; set; }
         public object ResponseObject { get; set; }
     }
 }

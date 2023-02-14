@@ -8,7 +8,6 @@ namespace Domain.Interfaces
     {
         BaseResponse RegisterLog(Log LogForm);
         Log GetLogByUsername(string username);
-        Guid GetUserId(int id);
         bool AnyLog(string username);
     }
 }

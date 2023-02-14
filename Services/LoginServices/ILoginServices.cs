@@ -6,8 +6,8 @@ namespace Services.LoginServices
 {
     public interface ILoginServices
     {
-        SingInResponse Login(SingIn request);
+        BaseResponse Login(SingIn request);
         BaseResponse Register(SingOn request);
-        SingInResponse RefreshAcess(string acess, IEnumerable<Claim> refresh);
+        BaseResponse RefreshAcess(string acess, IEnumerable<Claim> refresh);
     }
 }

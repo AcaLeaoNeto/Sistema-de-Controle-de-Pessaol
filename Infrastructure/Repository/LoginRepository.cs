@@ -12,29 +12,18 @@ namespace Infrastructure.Repository
         private readonly DBContext _db;
         private readonly INotification _Notification;
 
-        public LoginRepository(DBContext db, INotification notification, IUsuario usuario) : base(db)
+        public LoginRepository(DBContext db, INotification notification) : base(db)
         {
             _db = db;
             _Notification = notification;
         }
 
-        public  Guid GetUserId(int id)
-        {
-            var userGuid = _db.usuarios.FirstOrDefault(u => u.CodigoUsuario == id).Id;
-
-            if (userGuid == null || userGuid == Guid.Empty)
-            {
-                _Notification.AddMessage("Formulario invalido");
-                return Guid.Empty;
-            }
-
-            return userGuid;
-        }
 
         public  bool AnyLog(string username)
         {     
             return  _db.Logs.Any(l => l.Username == username);
         }
+
 
         public Log? GetLogByUsername(string username)
         {
@@ -45,6 +34,7 @@ namespace Infrastructure.Repository
             return TryLog;
         }
 
+
         public BaseResponse RegisterLog(Log LogForm)
         {
             try
@@ -54,6 +44,7 @@ namespace Infrastructure.Repository
             catch (Exception)
             {
                 _Notification.AddMessage("Formulario invalido");
+                return new BaseResponse(404, "Erro");
             }
             
             return new BaseResponse();

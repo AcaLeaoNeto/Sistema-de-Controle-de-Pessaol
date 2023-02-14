@@ -29,28 +29,25 @@ namespace Services.LoginServices
         public BaseResponse Register(SingOn request)
         {
             if (_loginRepository.AnyLog(request.Username))
-            {
                 _notification.AddMessage("Log já Cadastrado");
-                return null;
-            }
             
-            var userGuid = _loginRepository.GetUserId(request.UserId);
+
             
             if (_notification.Valid)
             {
                 CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, userGuid);
+                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, request.UserId);
                 var result = _loginRepository.RegisterLog(Newlog);
 
                 return result;
             }
 
-            return null;
+            return new BaseResponse(404, "Erro");
         }
 
 
-        public SingInResponse Login(SingIn request)
+        public BaseResponse Login(SingIn request)
         {
 
             var TryLog = _loginRepository.GetLogByUsername(request.Username);
@@ -71,24 +68,26 @@ namespace Services.LoginServices
                         new Claim(ClaimTypes.Name, TryLog.Username),
                         new Claim(ClaimTypes.Role, TryLog.Role) } );
 
-                return response;
+                return new BaseResponse(responseObject: response);
             }
 
-            return null;
+            return new BaseResponse(404, "Erro");
         }
 
 
-        public SingInResponse RefreshAcess(string acess, IEnumerable<Claim> refresh)
+        public BaseResponse RefreshAcess(string acess, IEnumerable<Claim> refresh)
         {
-            var AtSplit = acess.Split(".");
+            
             var AcessTk = new JwtSecurityTokenHandler().ReadJwtToken(acess);
 
-            if(AcessTk.ValidTo < DateTime.Now)
+            if(AcessTk.ValidTo > DateTime.Now)
             {
-                _notification.AddMessage("Token Incorreto");
-                return null;
+                _notification.AddMessage("Token Ainda Valido");
+                return new BaseResponse(404, "Erro");
             }
-                
+
+            var AtSplit = acess.Split(".");
+
             var ExpAt = AcessTk.Claims.First(x => x.Type == "exp").Value;
             var Atk = refresh.First(x => x.Type == "Atk").Value;
             var Ate = refresh.First(x => x.Type == "Ate").Value;
@@ -96,7 +95,7 @@ namespace Services.LoginServices
             if(Ate != ExpAt || AtSplit[2] != Atk)
             {
                 _notification.AddMessage("Token Ivalido");
-                return null;
+                return new BaseResponse(404, "Erro");
             }
 
             var userClaims = new List<Claim>
@@ -109,7 +108,7 @@ namespace Services.LoginServices
                 };
 
             var response = CreateToken(userClaims);
-            return response;
+            return new BaseResponse(responseObject: response);
         }
 
 

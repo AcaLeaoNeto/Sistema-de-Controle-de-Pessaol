@@ -3,6 +3,8 @@ using Domain.Enums;
 using Domain.Notifications;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Xml;
 
@@ -24,12 +26,13 @@ namespace Domain.Entitys.Usuario
             return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
         }
 
+        public static explicit operator User(UserChange dto)
+        {
+            return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
+        }
+
         [Required]
-        [JsonIgnore]
-        public Guid Id { get; set; }
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CodigoUsuario { get; set; }
+        public int Id { get; set; }
         [Required, MinLength(1), MaxLength(85)]
         public string Name { get; set; } = string.Empty;
         [Required]

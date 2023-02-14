@@ -24,7 +24,7 @@ namespace Presentation.Controllers
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<BaseResponse>> Register([FromBody] SingOn request)
+        public async Task<ActionResult<BaseResponse>> Register(SingOn request)
         {
 
             if (request is null)
@@ -32,12 +32,7 @@ namespace Presentation.Controllers
 
             try
             {
-                var result = _Login.Register(request);
-
-                if (_Notification.Valid)
-                    return Ok(result);
-                else
-                    return BadRequest(_Notification.Messages);
+                return BaseOperation(_Login.Register(request));
             }
             catch (Exception ex)
             {
@@ -48,16 +43,12 @@ namespace Presentation.Controllers
             
 
         [HttpPost("login")]
-        public async Task<ActionResult<SingInResponse>> Login([FromBody] SingIn request)
+        public async Task<ActionResult<BaseResponse>> Login(SingIn request)
         {
 
             try
             {
-                var response = _Login.Login(request);
-                if (_Notification.Valid)
-                    return Ok(response); 
-                else
-                    return BadRequest(_Notification.Messages);
+                return BaseOperation(_Login.Login(request));
             }
             catch (Exception ex)
             {
@@ -67,17 +58,13 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("RefreshLogin"), Authorize]
-        public async Task<ActionResult<SingInResponse>> RefeshLogin([FromBody] string request)
+        public async Task<ActionResult<BaseResponse>> RefeshLogin(string request)
         {
 
             try
             {
                 var identity = HttpContext.User.Identity as ClaimsIdentity;
-                var response = _Login.RefreshAcess(request, identity.Claims);
-                if (_Notification.Valid)
-                    return Ok(response);
-                else
-                    return BadRequest(_Notification.Messages);
+                return BaseOperation(_Login.RefreshAcess(request, identity.Claims));
             }
             catch (Exception ex)
             {
@@ -86,6 +73,14 @@ namespace Presentation.Controllers
 
         }
 
+        private ActionResult<BaseResponse> BaseOperation(BaseResponse obj)
+        {
+            if (_Notification.Valid)
+                return Ok(obj);
+
+            obj.ResponseObject = _Notification.Messages;
+            return StatusCode(obj.StatusCode, obj);
+        }
     }
 
 }
