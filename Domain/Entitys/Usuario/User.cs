@@ -1,12 +1,7 @@
-﻿using Domain.Entitys.Login;
-using Domain.Enums;
-using Domain.Notifications;
+﻿using Domain.Entitys.Base;
+using Domain.Entitys.Login;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using System.Xml;
 
 namespace Domain.Entitys.Usuario
 {
@@ -21,15 +16,11 @@ namespace Domain.Entitys.Usuario
             Setor = setor;
         }
 
-        public static explicit operator User(UserRequest dto)
+        public static explicit operator User(UserBaseValitador dto)
         {
             return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
         }
 
-        public static explicit operator User(UserChange dto)
-        {
-            return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
-        }
 
         [Required]
         public int Id { get; set; }
