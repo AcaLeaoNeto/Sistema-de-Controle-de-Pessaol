@@ -10,7 +10,7 @@ namespace Domain.Interfaces
         Task<BaseResponse> UsuariosAtivos();
         Task<BaseResponse> UsuariosDesativos();
         Task<BaseResponse> UsuarioById(int id);
-        Task<BaseResponse> Cadastro(UserDto obj);
+        Task<BaseResponse> Cadastro(UserRequest obj);
         Task<BaseResponse> Alterar(UserChange obj);
     }
 }

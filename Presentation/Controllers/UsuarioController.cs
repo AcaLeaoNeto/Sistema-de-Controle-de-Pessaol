@@ -63,7 +63,7 @@ namespace Presentation.Controllers
             }
 
             [HttpPost]
-            public async Task<ActionResult<BaseResponse>> AddUsuario(UserDto user)
+            public async Task<ActionResult<BaseResponse>> AddUsuario(UserRequest user)
             {
                 try
                 {

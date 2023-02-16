@@ -43,7 +43,7 @@ namespace Presentation.Controllers
             
 
         [HttpPost("login")]
-        public async Task<ActionResult<BaseResponse>> Login(SingIn request)
+        public async Task<ActionResult<BaseResponse>> Login(SingInRequest request)
         {
 
             try

@@ -47,7 +47,7 @@ namespace Services.LoginServices
         }
 
 
-        public BaseResponse Login(SingIn request)
+        public BaseResponse Login(SingInRequest request)
         {
 
             var TryLog = _loginRepository.GetLogByUsername(request.Username);

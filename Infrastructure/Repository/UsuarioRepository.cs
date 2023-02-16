@@ -79,7 +79,7 @@ namespace Infrastructure.Repository
         }
 
 
-        public async Task<BaseResponse> Cadastro(UserDto obj)
+        public async Task<BaseResponse> Cadastro(UserRequest obj)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Infrastructure.Repository
         {
             try
             {
-                var user = (User)obj;
+                var user = (User)obj.request;
                 user.Id = obj.id;
 
                 Update(user);

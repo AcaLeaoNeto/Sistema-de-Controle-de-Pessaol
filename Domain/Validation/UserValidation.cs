@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace Domain.Validation
 {
-    public class UserValidation : AbstractValidator<UserDto> , IValidations
+    public class UserValidation : AbstractValidator <UserRequest> , IValidations
     {
         public UserValidation()
         {
