@@ -100,7 +100,7 @@ namespace Infrastructure.Repository
         {
             try
             {
-                var user = (User)obj.request;
+                var user = (User)obj;
                 user.Id = obj.id;
 
                 Update(user);

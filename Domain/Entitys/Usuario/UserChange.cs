@@ -1,9 +1,10 @@
 ﻿
+using Domain.Entitys.Base;
+
 namespace Domain.Entitys.Usuario
 {
-    public class UserChange
+    public class UserChange : UserBaseValitador
     {
         public int id { get; set; }
-        public UserRequest request { get; set; }
     }
 }

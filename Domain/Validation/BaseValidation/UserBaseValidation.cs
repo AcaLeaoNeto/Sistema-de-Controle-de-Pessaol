@@ -1,18 +1,22 @@
-﻿using Domain.Interfaces;
-using Domain.Entitys.Usuario;
-using Domain.Enums;
+﻿using Domain.Enums;
 using FluentValidation;
+using Domain.Entitys.Base;
 
-namespace Domain.Validation
+namespace Domain.Validation.BaseValidation
 {
-    public class UserValidation : AbstractValidator <UserRequest> , IValidations
+    public class UserBaseValidation<T> : AbstractValidator<T> where T : UserBaseValitador
     {
-        public UserValidation()
+        public UserBaseValidation()
         {
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .Length(1, 80)
+                .WithMessage("Nome deve ter entre 1 a 80 caracteres");
+
             RuleFor(u => u.DataDeNacimento)
                 .LessThan(DateTime.Today)
                     .WithMessage("Data deve ser anterior a hoje")
-                
+
                 .LessThanOrEqualTo(DateTime.Now.AddYears(-18))
                     .WithMessage("Usuario deve ser Maior de idade");
 

@@ -26,9 +26,14 @@ namespace Domain.Entitys.Usuario
             return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
         }
 
+        public static explicit operator User(UserChange dto)
+        {
+            return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
+        }
+
         [Required]
         public int Id { get; set; }
-        [Required, MinLength(1), MaxLength(85)]
+        [Required]
         public string Name { get; set; } = string.Empty;
         [Required]
         public DateTime DataDeNacimento { get; set; }
