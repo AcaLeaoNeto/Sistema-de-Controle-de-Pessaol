@@ -23,7 +23,7 @@ namespace Presentation.Controllers
         }
 
 
-        [HttpPost("register")]
+        [HttpPost("register"), Authorize]
         public async Task<ActionResult<BaseResponse>> Register(SingOn request)
         {
 
@@ -38,14 +38,13 @@ namespace Presentation.Controllers
             {
                 return BadRequest(ex.Message);
             }
-           
+
         }
-            
+
 
         [HttpPost("login")]
         public async Task<ActionResult<BaseResponse>> Login(SingInRequest request)
         {
-
             try
             {
                 return BaseOperation(_Login.Login(request));
@@ -58,7 +57,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("RefreshLogin"), Authorize]
-        public async Task<ActionResult<BaseResponse>> RefeshLogin(string request)
+        public async Task<ActionResult<BaseResponse>> RefeshLogin([FromBody] string request)
         {
 
             try

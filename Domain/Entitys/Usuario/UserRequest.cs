@@ -3,7 +3,7 @@ using Domain.Entitys.Base;
 
 namespace Domain.Entitys.Usuario
 {
-    public class UserRequest : UserBaseValitador
+    public class UserRequest : UserBase
     {
     }
 }

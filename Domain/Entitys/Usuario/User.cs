@@ -16,7 +16,7 @@ namespace Domain.Entitys.Usuario
             Setor = setor;
         }
 
-        public static explicit operator User(UserBaseValitador dto)
+        public static explicit operator User(UserBase dto)
         {
             return new User(dto.Name, dto.DataDeNacimento, dto.Sexo, dto.Setor);
         }

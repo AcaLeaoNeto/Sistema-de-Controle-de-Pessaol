@@ -3,15 +3,12 @@ using Domain.Interfaces;
 using Domain.Notifications;
 using Domain.Entitys.Usuario;
 using Microsoft.AspNetCore.Authorization;
-using System.Net;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Domain.Entitys.Base;
 
 namespace Presentation.Controllers
 {
         [Route("api/[controller]")]
-        [ApiController]
+        [ApiController, Authorize]
         public class UsuarioController : ControllerBase
         {
         private readonly IUsuario _usuario;
@@ -52,8 +49,8 @@ namespace Presentation.Controllers
             [HttpGet("{id}")]
             public async Task<ActionResult<BaseResponse>> GetUsuarioAsync(int id)
             {
-                try
-                {
+                try 
+                { 
                     return BaseOperation(await _usuario.UsuarioById(id));
                 }
                 catch (Exception ex)
@@ -119,7 +116,11 @@ namespace Presentation.Controllers
                 if (_notification.Valid)
                     return Ok(obj);
 
-                obj.ResponseObject = _notification.Messages;
+                obj.ResponseMessage.RemoveAt(0);
+                foreach(var message in _notification.Messages)
+                    obj.ResponseMessage.Add(message);
+
+                obj.ResponseObject = null;
                 return StatusCode(obj.StatusCode, obj);
             }
 

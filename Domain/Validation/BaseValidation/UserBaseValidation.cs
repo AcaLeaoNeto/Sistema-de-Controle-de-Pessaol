@@ -4,7 +4,7 @@ using Domain.Entitys.Base;
 
 namespace Domain.Validation.BaseValidation
 {
-    public class UserBaseValidation<T> : AbstractValidator<T> where T : UserBaseValitador
+    public class UserBaseValidation<T> : AbstractValidator<T> where T : UserBase
     {
         public UserBaseValidation()
         {

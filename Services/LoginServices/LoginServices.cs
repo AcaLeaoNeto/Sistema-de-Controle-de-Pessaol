@@ -79,8 +79,8 @@ namespace Services.LoginServices
         {
             
             var AcessTk = new JwtSecurityTokenHandler().ReadJwtToken(acess);
-
-            if(AcessTk.ValidTo > DateTime.Now)
+            
+            if(AcessTk.ValidTo > DateTime.UtcNow)
             {
                 _notification.AddMessage("Token Ainda Valido");
                 return new BaseResponse(404, "Erro");
@@ -151,7 +151,7 @@ namespace Services.LoginServices
 
             var Acess = new JwtSecurityToken(
                 claims: AcessClaims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddMinutes(0.5),
                 signingCredentials: creds);
 
             var AcessToken = new JwtSecurityTokenHandler().WriteToken(Acess);
@@ -166,7 +166,7 @@ namespace Services.LoginServices
 
             var Refresh = new JwtSecurityToken(
                 claims: RefreshClaims,
-                expires: DateTime.Now.AddHours(8),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: creds);
 
             var RefreshToken = new JwtSecurityTokenHandler().WriteToken(Refresh);

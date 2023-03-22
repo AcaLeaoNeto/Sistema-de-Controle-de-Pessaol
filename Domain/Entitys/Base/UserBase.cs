@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entitys.Base
 {
-    public class UserBaseValitador
+    public class UserBase
     {
         public string Name { get; set; } = string.Empty;
         public DateTime DataDeNacimento { get; set; }

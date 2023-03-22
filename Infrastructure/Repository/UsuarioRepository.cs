@@ -26,7 +26,7 @@ namespace Infrastructure.Repository
             if (user is null)
             {
                 _notification.AddMessage("Usuario não encontrado");
-                return new BaseResponse(404, "Erro");
+                return new BaseResponse(404);
             }
 
             user.Ativo = false;
@@ -42,7 +42,7 @@ namespace Infrastructure.Repository
             if (user is null)
             {
                 _notification.AddMessage("Usuario não encontrado");
-                return new BaseResponse(404, "Erro");
+                return new BaseResponse(404);
             }
 
             Delete(user);
@@ -72,7 +72,7 @@ namespace Infrastructure.Repository
             if (user is null)
             {
                 _notification.AddMessage("Usuario não encontrado");
-                return new BaseResponse(404, "Erro");
+                return new BaseResponse(404);
             }
 
             return new BaseResponse(responseObject: user);
@@ -91,7 +91,7 @@ namespace Infrastructure.Repository
             catch (Exception ex)
             {
                 _notification.AddMessage(ex.Message);
-                return new BaseResponse(400, "Erro");
+                return new BaseResponse(400);
             }
         }
 
@@ -109,7 +109,7 @@ namespace Infrastructure.Repository
             catch (Exception ex)
             {
                 _notification.AddMessage(ex.Message);
-                return new BaseResponse(400, "Erro");
+                return new BaseResponse(400);
             }
         }
 

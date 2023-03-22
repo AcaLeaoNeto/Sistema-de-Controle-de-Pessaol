@@ -8,13 +8,13 @@ namespace Domain.Entitys.Base
                                         object responseObject = null)
         {
             StatusCode = statusCode;
-            ResponseMessage = responseMessege;
+            ResponseMessage.Add(responseMessege);
             ResponseObject = responseObject;
         }
 
 
         public int StatusCode { get; set; }
-        public string ResponseMessage { get; set; }
+        public List<string> ResponseMessage { get; set; } = new List<string>();
         public object ResponseObject { get; set; }
     }
 }
