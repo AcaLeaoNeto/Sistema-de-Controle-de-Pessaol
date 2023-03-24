@@ -85,7 +85,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpDelete("id")]
+            [HttpDelete("{id}")]
             public async Task<ActionResult<BaseResponse>> DeletarUsuario(int id)
             {
                 try
