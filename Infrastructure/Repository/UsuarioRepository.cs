@@ -74,8 +74,10 @@ namespace Infrastructure.Repository
                 _notification.AddMessage("Usuario não encontrado");
                 return new BaseResponse(404);
             }
+            var userList = new List<User>();
+            userList.Add(user);
 
-            return new BaseResponse(responseObject: user);
+            return new BaseResponse(responseObject: userList);
         }
 
 
