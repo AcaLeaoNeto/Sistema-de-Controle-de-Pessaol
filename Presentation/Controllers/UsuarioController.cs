@@ -98,7 +98,7 @@ namespace Presentation.Controllers
                 }
             }
 
-            [HttpPatch("Desativar/id")]
+            [HttpPatch("Desativar/{id}")]
             public async Task<ActionResult<BaseResponse>> DesativarUsuario(int id)
             {
                 try
