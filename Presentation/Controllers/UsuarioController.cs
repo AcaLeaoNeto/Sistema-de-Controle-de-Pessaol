@@ -117,6 +117,7 @@ namespace Presentation.Controllers
                     return Ok(obj);
 
                 obj.ResponseMessage.RemoveAt(0);
+
                 foreach(var message in _notification.Messages)
                     obj.ResponseMessage.Add(message);
 

@@ -39,6 +39,7 @@ namespace Infrastructure.Repository
         public async Task<BaseResponse> ApagarUsuario(int id)
         {
             var user = _db.usuarios.FirstOrDefault(u => u.Id == id);
+          
             if (user is null)
             {
                 _notification.AddMessage("Usuario não encontrado");
@@ -74,9 +75,9 @@ namespace Infrastructure.Repository
                 _notification.AddMessage("Usuario não encontrado");
                 return new BaseResponse(404);
             }
-            var userList = new List<User>();
-            userList.Add(user);
 
+            var userList = new List<User>{user};
+            
             return new BaseResponse(responseObject: userList);
         }
 

@@ -27,11 +27,7 @@ namespace Infrastructure.Repository
 
         public Log? GetLogByUsername(string username)
         {
-            var TryLog = _db.Logs.FirstOrDefault(l => l.Username == username);
-            if (TryLog is null)
-                return null;
-
-            return TryLog;
+            return _db.Logs.FirstOrDefault(l => l.Username == username);
         }
 
 

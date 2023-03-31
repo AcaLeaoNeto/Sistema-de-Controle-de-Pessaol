@@ -29,21 +29,19 @@ namespace Services.LoginServices
         public BaseResponse Register(SingOn request)
         {
             if (_loginRepository.AnyLog(request.Username))
-                _notification.AddMessage("Log já Cadastrado");
-            
-
-            
-            if (_notification.Valid)
             {
-                CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-                var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, request.UserId);
-                var result = _loginRepository.RegisterLog(Newlog);
-
-                return result;
+                _notification.AddMessage("Log já Cadastrado");
+                return new BaseResponse(404, "Erro");
             }
 
-            return new BaseResponse(404, "Erro");
+
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            var Newlog = new Log(request.Username, passwordHash, passwordSalt, request.Role, request.UserId);
+            var result = _loginRepository.RegisterLog(Newlog);
+
+            return result;
+            
         }
 
 
@@ -52,26 +50,18 @@ namespace Services.LoginServices
 
             var TryLog = _loginRepository.GetLogByUsername(request.Username);
 
-            if (TryLog is null)
+            if (TryLog is null || !VerifyPasswordHash(request.Password, TryLog.PasswordHash, TryLog.PasswordSalt))
             {
-                _notification.AddMessage("Log Não Encontrado");
-            }
-            else if (!VerifyPasswordHash(request.Password, TryLog.PasswordHash, TryLog.PasswordSalt))
-            {
-                _notification.AddMessage("Senha Incorreta");
-            }
-                
-
-            if (_notification.Valid)
-            {
-                var response = CreateToken( new List<Claim> {
-                        new Claim(ClaimTypes.Name, TryLog.Username),
-                        new Claim(ClaimTypes.Role, TryLog.Role) } );
-
-                return new BaseResponse(responseObject: response);
+                _notification.AddMessage("Usuario ou Senha Incorreta.");
+                return new BaseResponse(400, "Erro");
             }
 
-            return new BaseResponse(404, "Erro");
+			var response = CreateToken( new List<Claim> {
+                new Claim(ClaimTypes.Name, TryLog.Username),
+                new Claim(ClaimTypes.Role, TryLog.Role) 
+            });
+
+            return new BaseResponse(responseObject: response);
         }
 
 
@@ -83,7 +73,7 @@ namespace Services.LoginServices
             if(AcessTk.ValidTo > DateTime.UtcNow)
             {
                 _notification.AddMessage("Token Ainda Valido");
-                return new BaseResponse(404, "Erro");
+                return new BaseResponse(400, "Erro");
             }
 
             var AtSplit = acess.Split(".");
@@ -95,17 +85,17 @@ namespace Services.LoginServices
             if(Ate != ExpAt || AtSplit[2] != Atk)
             {
                 _notification.AddMessage("Token Ivalido");
-                return new BaseResponse(404, "Erro");
+                return new BaseResponse(400, "Erro");
             }
 
             var userClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name,
-                        AcessTk.Claims.First(x => x.Type == ClaimTypes.Name).Value),
+            { 
+                new Claim(ClaimTypes.Name,
+                AcessTk.Claims.First(x => x.Type == ClaimTypes.Name).Value),
 
-                    new Claim(ClaimTypes.Role,
-                        AcessTk.Claims.First(x => x.Type == ClaimTypes.Role).Value)
-                };
+                new Claim(ClaimTypes.Role,
+                AcessTk.Claims.First(x => x.Type == ClaimTypes.Role).Value)
+             };
 
             var response = CreateToken(userClaims);
             return new BaseResponse(responseObject: response);
@@ -151,7 +141,7 @@ namespace Services.LoginServices
 
             var Acess = new JwtSecurityToken(
                 claims: AcessClaims,
-                expires: DateTime.Now.AddMinutes(0.5),
+                expires: DateTime.Now.AddMinutes(2),
                 signingCredentials: creds);
 
             var AcessToken = new JwtSecurityTokenHandler().WriteToken(Acess);
@@ -166,12 +156,10 @@ namespace Services.LoginServices
 
             var Refresh = new JwtSecurityToken(
                 claims: RefreshClaims,
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.Now.AddMinutes(3),
                 signingCredentials: creds);
 
             var RefreshToken = new JwtSecurityTokenHandler().WriteToken(Refresh);
-
-
 
             return new SingInResponse(AcessToken, RefreshToken);
         }
